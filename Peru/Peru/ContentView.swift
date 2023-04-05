@@ -23,7 +23,6 @@ struct ContentView: View {
         animation: .default)
     private var collections: FetchedResults<Collections>
     
-    //@State private var selection = Set<Article>()
     @State private var selection = Set<Article.ID>()
     @State private var sortOrder = [KeyPathComparator(\Article.year)]
     @State var sorting: [KeyPathComparator<Article>] = [
@@ -104,6 +103,12 @@ struct ContentView: View {
             TableColumn("Year", value: \.year) { article in
                 Text(String(article.year))
             }.width(min:50, ideal:50, max:50)
+            TableColumn("Journal") { article in
+                Text(article.journal?.name ?? "---")
+            }.width(min:30, ideal:50, max:200)
+            TableColumn("Publisher") { article in
+                Text(article.publishedBy ?? "---")
+            }.width(min:30, ideal:50, max:200)
         }
     rows: {
         ForEach(items) { article in
@@ -125,7 +130,7 @@ struct ContentView: View {
         }
     }
     
-    private func fillStore() {
+    /*private func fillStore() {
         let sectionOne = Collections(context: viewContext)
         sectionOne.name = "Collections"
         sectionOne.canDelete = false
@@ -200,7 +205,7 @@ struct ContentView: View {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-    }
+    }*/
     
     private func addItem() {
         withAnimation {

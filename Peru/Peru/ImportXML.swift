@@ -50,12 +50,12 @@ class ImportXML {
                 availableAuthors.updateValue(author, forKey: author.lastname!)
             }
         }
-        var availableJournals = [String]()
+        var availableJournals = Dictionary<String, Journal>()
         let journalRequest = NSFetchRequest<Journal>()
         journalRequest.entity = Journal.entity()
         if let journalsInDB = try? moc.fetch(journalRequest) {
             for journal in journalsInDB {
-                availableJournals.append(journal.name!)
+                availableJournals.updateValue(journal, forKey: journal.name!)
             }
         }
         
@@ -84,8 +84,8 @@ class ImportXML {
             let authorSet = NSMutableOrderedSet()
             for author in hit.contributors.authors.author {
                 if let fullname = author.text, !fullname.isEmpty {
-                    let nameComponents  = fullname.components(separatedBy: " ")
-                    let key = nameComponents.first!.replacingOccurrences(of: ",", with: "")
+                    let nameComponents  = fullname.components(separatedBy: ", ")
+                    let key = nameComponents.first!
                     if let author = availableAuthors[key] {
                         authorSet.add(author)
                     }
@@ -93,11 +93,12 @@ class ImportXML {
                         let author = Authors(context: moc)
                         author.lastname = key
                         if nameComponents.count > 1 {
-                            author.firstname = nameComponents [1]
+                            author.firstname = nameComponents[1].components(separatedBy: " ").first
+                            if nameComponents[1].components(separatedBy: " ").count > 2 {
+                                author.middlenames = nameComponents[1].components(separatedBy: " ")[1]
+                            }
                         }
-                        if nameComponents.count > 2 {
-                            author.middlenames = nameComponents [2]
-                        }
+                        
                         authorSet.add(author)
                         availableAuthors.updateValue(author, forKey: key)
                     }
@@ -138,6 +139,18 @@ class ImportXML {
                 article.volume = volume
             }
             
+            if let issue = hit.number.text {
+                article.issue = issue
+            }
+            
+            if let edition = hit.edition.text {
+                article.edition = edition
+            }
+            
+            if let isbn = hit.isbn.text {
+                article.isbn = isbn
+            }
+            
             if let number = hit.number.text {
                 article.edition = number
             }
@@ -146,17 +159,27 @@ class ImportXML {
                 article.abstract = abstract
             }
             
+            if let city = hit["pub-location"].text {
+                article.city = city
+            }
+            
+            if let publisher = hit["publisher"].text {
+                article.publishedBy = publisher
+            }
+            
+            
             for journal in hit.periodical {
                 if let fullTitle = journal["full-title"].text {
-                    if availableJournals.contains(fullTitle) {
-                        article.journal = fullTitle
+                    if let journal = availableJournals[fullTitle] {
+                        article.journal = journal
                     } else {
-                        article.journal = fullTitle
                         let newJournal = Journal(context: moc)
                         newJournal.name = fullTitle
                         if let abbrev = journal["abbr-1"].text {
                             newJournal.abbrev = abbrev
                         }
+                        article.journal = newJournal
+                        availableJournals.updateValue(newJournal, forKey: fullTitle)
                     }
                 }
             }
@@ -170,6 +193,7 @@ class ImportXML {
                         let newKeyword = Keywords(context: moc)
                         newKeyword.keyword = myKeyword
                         article.addToKeywords(newKeyword)
+                        availableKeywords.updateValue(newKeyword, forKey: myKeyword)
                     }
                 }
             }

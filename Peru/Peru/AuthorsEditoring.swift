@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import AQUI
+import UniformTypeIdentifiers
 
 struct AuthorsPopoverContent: View {
     
@@ -18,11 +19,12 @@ struct AuthorsPopoverContent: View {
     private var authorItems: FetchedResults<Authors>
     
     @Binding var authorsSet: NSOrderedSet
+    @State private var dragging: Authors?
     
     init(_ authorsSet: Binding<NSOrderedSet>) {
         self._authorsSet = authorsSet
     }
-   
+    
     @State private var selectedAuthor: Authors?
     
     @State var lastname: String = ""
@@ -84,28 +86,54 @@ struct AuthorsPopoverContent: View {
                         .disabled(self.selectedAuthor == nil)
                 }
             }
-            List(selection: $selectedAuthor) {
-                ForEach(authorItems, id: \.self) { author in
-                    HStack {
-                        Text(author.lastname ?? "---")
-                        Text(",")
-                        Text(author.firstname ?? "---")
-                        Spacer()
-                        Toggle(isOn: getToggleState(author: author)) {
-                                }
-                                .toggleStyle(.checkbox)
+            
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80, maximum: 100), spacing: 4)], spacing: 0) {
+                ForEach((authorsSet).array as! [Authors],id: \.self) { author in
+                    Text(author.lastname ?? "---")
+                        .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 3)
+                                .stroke(.gray, lineWidth: 3)
+                        )
+                        .cornerRadius(5.0)
+                        .lineLimit(1)
+                        .onDrag {
+                            self.dragging = author
+                            return NSItemProvider(object: String(author.objectID.uriRepresentation().absoluteString) as NSString)
+                        }
+                        .onDrop(of: [UTType.text], delegate: DragRelocateDelegate(item: author, listData: $authorsSet, current: $dragging))
+                        .onTapGesture {
+                            self.selectedAuthor = author
+                        }
+                }
+                .padding(4)
+            }.animation(.default, value:authorsSet)
+            ScrollViewReader { proxy in
+                List(selection: $selectedAuthor) {
+                    ForEach(authorItems, id: \.self) { author in
+                        HStack {
+                            Text(author.lastname ?? "---")
+                            Text(",")
+                            Text(author.firstname ?? "---")
+                            Spacer()
+                            Toggle(isOn: getToggleState(author: author)) {
+                            }
+                            .toggleStyle(.checkbox)
+                        }
                     }
-                }
-            }.onChange(of: selectedAuthor) { newValue in
-                if self.selectedAuthor != nil {
-                    self.lastname = self.selectedAuthor?.lastname ?? ""
-                    self.firstname = self.selectedAuthor?.firstname ?? ""
-                    self.middlenames = self.selectedAuthor?.middlenames ?? ""
-                }
-                else {
-                    self.lastname = ""
-                    self.firstname = ""
-                    self.middlenames = ""
+                }.onChange(of: selectedAuthor) { newValue in
+                    if self.selectedAuthor != nil {
+                        self.lastname = self.selectedAuthor?.lastname ?? ""
+                        self.firstname = self.selectedAuthor?.firstname ?? ""
+                        self.middlenames = self.selectedAuthor?.middlenames ?? ""
+                        proxy.scrollTo(self.selectedAuthor!, anchor: .center)
+                    }
+                    else {
+                        self.lastname = ""
+                        self.firstname = ""
+                        self.middlenames = ""
+                    }
                 }
             }
         }

@@ -6,15 +6,16 @@
         <attribute name="added" attributeType="Date" defaultDateTimeInterval="664984260" usesScalarValueType="NO"/>
         <attribute name="authorsForDisplay" optional="YES" attributeType="String" defaultValueString="---"/>
         <attribute name="citekey" optional="YES" attributeType="String"/>
+        <attribute name="citeKey" optional="YES" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="doi" optional="YES" attributeType="URI"/>
         <attribute name="edition" optional="YES" attributeType="String"/>
         <attribute name="editors" optional="YES" attributeType="String"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
         <attribute name="issue" optional="YES" attributeType="String"/>
-        <attribute name="journal" optional="YES" attributeType="String"/>
         <attribute name="pages" optional="YES" attributeType="String"/>
         <attribute name="published" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="publishedBy" optional="YES" attributeType="String"/>
         <attribute name="relatedFile" optional="YES" attributeType="URI"/>
         <attribute name="submitted" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="subtitle" optional="YES" attributeType="String"/>
@@ -24,6 +25,7 @@
         <attribute name="volume" optional="YES" attributeType="String"/>
         <attribute name="year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="authors" optional="YES" toMany="YES" minCount="1" maxCount="100" deletionRule="Nullify" ordered="YES" destinationEntity="Authors" inverseName="items" inverseEntity="Authors"/>
+        <relationship name="journal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Journal" inverseName="myArticles" inverseEntity="Journal"/>
         <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keywords" inverseName="items" inverseEntity="Keywords"/>
         <relationship name="notes" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Notes" inverseName="item" inverseEntity="Notes"/>
     </entity>
@@ -45,6 +47,7 @@
     <entity name="Journal" representedClassName="Journal" syncable="YES" codeGenerationType="class">
         <attribute name="abbrev" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String" defaultValueString="Journal"/>
+        <relationship name="myArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="journal" inverseEntity="Article"/>
     </entity>
     <entity name="Keywords" representedClassName="Keywords" syncable="YES" codeGenerationType="class">
         <attribute name="keyword" attributeType="String" defaultValueString="Keyword"/>

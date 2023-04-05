@@ -16,22 +16,22 @@
 		8B74875329CB742300054783 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B74875229CB742300054783 /* CustomTabView.swift */; };
 		8B7798EC29D82E8F00BB2072 /* AuthorsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7798EB29D82E8F00BB2072 /* AuthorsEditoring.swift */; };
 		8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */; };
+		8B83805E29DD768100AD4229 /* SwiftyXMLParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; };
+		8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8590C029D95EAB00ACB632 /* ImportXML.swift */; };
-		8B8590CD29D9615B00ACB632 /* SwiftyXMLParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8590C929D9614500ACB632 /* SwiftyXMLParser.framework */; };
-		8B8590CE29D9615B00ACB632 /* SwiftyXMLParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8590C929D9614500ACB632 /* SwiftyXMLParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
 		8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB297A29DB19A400817A14 /* ImportRIS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8B8590C829D9614500ACB632 /* PBXContainerItemProxy */ = {
+		8B83805A29DD75D500AD4229 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2B6D92331C7F0587000D2D06;
 			remoteInfo = SwiftyXMLParser;
 		};
-		8B8590CA29D9614500ACB632 /* PBXContainerItemProxy */ = {
+		8B83805C29DD75D500AD4229 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */;
 			proxyType = 2;
@@ -47,7 +47,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8B8590CE29D9615B00ACB632 /* SwiftyXMLParser.framework in Embed Frameworks */,
+				8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,7 +67,7 @@
 		8B7798EB29D82E8F00BB2072 /* AuthorsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsEditoring.swift; sourceTree = "<group>"; };
 		8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalContentViews.swift; sourceTree = "<group>"; };
 		8B8590C029D95EAB00ACB632 /* ImportXML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportXML.swift; sourceTree = "<group>"; };
-		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = "../../stuff-git/SwiftyXMLParser/SwiftyXMLParser.xcodeproj"; sourceTree = "<group>"; };
+		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = ../../SwiftyXMLParser/SwiftyXMLParser.xcodeproj; sourceTree = "<group>"; };
 		8BFB297A29DB19A400817A14 /* ImportRIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRIS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,7 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BAFBDE529CE10730080E68D /* AQUI in Frameworks */,
-				8B8590CD29D9615B00ACB632 /* SwiftyXMLParser.framework in Frameworks */,
+				8B83805E29DD768100AD4229 /* SwiftyXMLParser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,11 +129,11 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		8B8590C429D9614500ACB632 /* Products */ = {
+		8B83805629DD75D500AD4229 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8B8590C929D9614500ACB632 /* SwiftyXMLParser.framework */,
-				8B8590CB29D9614500ACB632 /* SwiftyXMLParserTests.xctest */,
+				8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */,
+				8B83805D29DD75D500AD4229 /* SwiftyXMLParserTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,7 +200,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 8B8590C429D9614500ACB632 /* Products */;
+					ProductGroup = 8B83805629DD75D500AD4229 /* Products */;
 					ProjectRef = 8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */;
 				},
 			);
@@ -212,18 +212,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		8B8590C929D9614500ACB632 /* SwiftyXMLParser.framework */ = {
+		8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SwiftyXMLParser.framework;
-			remoteRef = 8B8590C829D9614500ACB632 /* PBXContainerItemProxy */;
+			remoteRef = 8B83805A29DD75D500AD4229 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8B8590CB29D9614500ACB632 /* SwiftyXMLParserTests.xctest */ = {
+		8B83805D29DD75D500AD4229 /* SwiftyXMLParserTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = SwiftyXMLParserTests.xctest;
-			remoteRef = 8B8590CA29D9614500ACB632 /* PBXContainerItemProxy */;
+			remoteRef = 8B83805C29DD75D500AD4229 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

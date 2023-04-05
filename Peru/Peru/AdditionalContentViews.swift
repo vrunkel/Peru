@@ -27,14 +27,9 @@ struct articleDetailsView: View {
                     .font(.subheadline)
                 Text(article.published ?? Date(), style: .date)
                     .opacity((article.published == nil ? 0.1: 1))
-                Text(article.authorsForDisplay ?? "---")
-                
+                //Text(article.authorsForDisplay ?? "---")
+                Text(((article.authors ?? NSOrderedSet()).array as! [Authors]).map{ $0.lastname ?? "-" }.joined(separator: ", "))
                 Text(((article.keywords ?? NSSet()).allObjects as! [Keywords]).map{ $0.keyword ?? "-" }.joined(separator: ", "))
-                /*LazyVGrid(columns: columns) {
-                    ForEach((article.keywords ?? NSSet()).allObjects as! [Keywords],id: \.self) { keyword in
-                        Text(keyword.keyword ?? "---")
-                    }
-                 }*/
                 
                 Text(article.abstract ?? "no abstract")
                     .onTapGesture {
@@ -49,17 +44,6 @@ struct articleDetailsView: View {
     }
 }
 
-/*var articleDetailsView: some View {
-    VStack(alignment: .leading) {
-        Text(self.selectedItem?.title ?? "--")
-            .font(.headline)
-        Text(self.selectedItem?.added ?? Date(), style: .date)
-        Text(self.selectedItem?.authorsForDisplay ?? "---")
-        Spacer()
-    }.padding(10)
-}*/
-
-
 struct articleEditView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -72,10 +56,6 @@ struct articleEditView: View {
     @State private var showAuthorsPopover: Bool = false
     @State private var dragging: Authors?
     
-    @State var selection = 0
-    var content: Array<String> = ["1","2","3"]
-    
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -87,25 +67,24 @@ struct articleEditView: View {
                 }
                 TextField("Title", text: Binding($article.title, replacingNilWith: ""), axis: .vertical)
                     .font(.headline)
-                    .lineLimit(_:3)
+                    .lineLimit(_:5)
                 TextField("Subtitle", text: Binding($article.subtitle, replacingNilWith: ""), axis: .vertical)
                 
                 DatePicker("Published", selection: Binding($article.published, replacingNilWith: Date()), displayedComponents: [.date])
                     .frame(maxWidth: 180)
                     .opacity((article.published == nil ? 0.33: 1))
                 
-                //Text(article.authorsForDisplay ?? "---")
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80, maximum: 100), spacing: 4)], spacing: 0) {
                     ForEach((article.authors ?? NSOrderedSet()).array as! [Authors],id: \.self) { author in
                         Text(author.lastname ?? "---")
                             .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
-                            //.foregroundColor(.white)
                             .background(Color.white)
                             .overlay(
                                     RoundedRectangle(cornerRadius: 3)
                                         .stroke(.gray, lineWidth: 3)
                                 )
                             .cornerRadius(5.0)
+                            .lineLimit(1)
                             .onDrag {
                                 self.dragging = author
                                 return NSItemProvider(object: String(author.objectID.uriRepresentation().absoluteString) as NSString)
@@ -121,10 +100,20 @@ struct articleEditView: View {
                         isPresented: self.$showAuthorsPopover,
                         arrowEdge: .bottom
                     ) { AuthorsPopoverContent(Binding($article.authors, replacingNilWith: NSOrderedSet()))}
-                        .padding()
+                        .padding(4)
                 }.animation(.default, value: article.authors)
-                SwiftUIComboBox(content: content, nbLines: 3, selected: $selection)
+                Picker("Journal", selection: $article.journal) {
+                    ForEach(journals, id: \.self) { journal in
+                        Text(journal.name ?? "---").tag(journal as Journal?)
+                    }
+                }
                 TextField("City", text: Binding($article.city, replacingNilWith: ""))
+                Text("Abstract")
+                    .font(.caption)
+                    .padding(.top)
+                ScrollView {
+                    TextEditor(text: Binding($article.abstract, replacingNilWith: ""))
+                }
                 Spacer()
             }
         }.padding()
