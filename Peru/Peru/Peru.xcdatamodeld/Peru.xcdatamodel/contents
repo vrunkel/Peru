@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22D49" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Article" representedClassName="Article" syncable="YES" codeGenerationType="class">
+        <attribute name="abstract" optional="YES" attributeType="String"/>
+        <attribute name="accepted" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="added" attributeType="Date" defaultDateTimeInterval="664984260" usesScalarValueType="NO"/>
+        <attribute name="authorsForDisplay" optional="YES" attributeType="String" defaultValueString="---"/>
+        <attribute name="citekey" optional="YES" attributeType="String"/>
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="doi" optional="YES" attributeType="URI"/>
+        <attribute name="edition" optional="YES" attributeType="String"/>
+        <attribute name="editors" optional="YES" attributeType="String"/>
+        <attribute name="isbn" optional="YES" attributeType="String"/>
+        <attribute name="issue" optional="YES" attributeType="String"/>
+        <attribute name="journal" optional="YES" attributeType="String"/>
+        <attribute name="pages" optional="YES" attributeType="String"/>
+        <attribute name="published" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="relatedFile" optional="YES" attributeType="URI"/>
+        <attribute name="submitted" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="subtitle" optional="YES" attributeType="String"/>
+        <attribute name="supplementURI" optional="YES" attributeType="URI"/>
+        <attribute name="title" attributeType="String" defaultValueString="title"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="volume" optional="YES" attributeType="String"/>
+        <attribute name="year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="authors" optional="YES" toMany="YES" minCount="1" maxCount="100" deletionRule="Nullify" ordered="YES" destinationEntity="Authors" inverseName="items" inverseEntity="Authors"/>
+        <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keywords" inverseName="items" inverseEntity="Keywords"/>
+        <relationship name="notes" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Notes" inverseName="item" inverseEntity="Notes"/>
+    </entity>
+    <entity name="Authors" representedClassName="Authors" syncable="YES" codeGenerationType="class">
+        <attribute name="firstname" attributeType="String" defaultValueString="Firstname"/>
+        <attribute name="initials" optional="YES" transient="YES" attributeType="String"/>
+        <attribute name="lastname" attributeType="String" defaultValueString="Lastname"/>
+        <attribute name="middlenames" optional="YES" attributeType="String"/>
+        <attribute name="orderID" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="authors" inverseEntity="Article"/>
+    </entity>
+    <entity name="Collections" representedClassName="Collections" syncable="YES" codeGenerationType="class">
+        <attribute name="canDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSection" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="New collection"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collections" inverseName="parent" inverseEntity="Collections"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collections" inverseName="children" inverseEntity="Collections"/>
+    </entity>
+    <entity name="Journal" representedClassName="Journal" syncable="YES" codeGenerationType="class">
+        <attribute name="abbrev" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String" defaultValueString="Journal"/>
+    </entity>
+    <entity name="Keywords" representedClassName="Keywords" syncable="YES" codeGenerationType="class">
+        <attribute name="keyword" attributeType="String" defaultValueString="Keyword"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="keywords" inverseEntity="Article"/>
+    </entity>
+    <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">
+        <attribute name="content" optional="YES" attributeType="String"/>
+        <relationship name="item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Article" inverseName="notes" inverseEntity="Article"/>
+    </entity>
+</model>
