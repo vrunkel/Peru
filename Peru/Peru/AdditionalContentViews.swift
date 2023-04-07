@@ -15,32 +15,76 @@ struct articleDetailsView: View {
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     @State var abstractIsExpanded: Bool = false
+    @State private var showKeywordsPopover: Bool = false
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(article.type ?? "--")
-                    .font(.subheadline)
-                Text(article.title ?? "--")
-                    .font(.headline)
-                Text(article.subtitle ?? "--")
-                    .font(.subheadline)
-                Text(article.published ?? Date(), style: .date)
-                    .opacity((article.published == nil ? 0.1: 1))
-                //Text(article.authorsForDisplay ?? "---")
-                Text(((article.authors ?? NSOrderedSet()).array as! [Authors]).map{ $0.lastname ?? "-" }.joined(separator: ", "))
-                Text(((article.keywords ?? NSSet()).allObjects as! [Keywords]).map{ $0.keyword ?? "-" }.joined(separator: ", "))
-                
-                Text(article.abstract ?? "no abstract")
-                    .onTapGesture {
-                        self.abstractIsExpanded.toggle()
+        return GeometryReader { geometry in
+            ScrollView(.vertical) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Group {
+                        Text(article.type ?? "--")
+                            .font(.subheadline)
+                        Text(((article.authors ?? NSOrderedSet()).array as! [Authors]).map{ $0.lastname ?? "-" }.joined(separator: ", "))
+                            .padding(.top, 5)
+                        Text(article.title ?? "--")
+                            .font(.headline)
+                            .padding(.top, 5)
+                        Text(article.subtitle ?? "--")
+                            .font(.subheadline)
+                        
+                        Text(article.journal?.name ?? "--")
+                            .font(.caption)
+                        LazyHStack{
+                            Text("vol. " + (article.volume ?? "-"))
+                            Text("(" + (article.issue ?? "-") + ")")
+                            Text("pages " + (article.pages ?? "-"))
+                        }
+                        .font(.caption)
                     }
-                    .lineLimit(self.abstractIsExpanded ? nil: 5)
-                
-                Text(article.doi?.description ?? "https://doi...")
-                Spacer()
-            }.padding(10)
+                    .frame(width: geometry.size.width, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    HStack {
+                        Button {
+                            self.showKeywordsPopover.toggle()
+                        } label: {
+                            Image(systemName: "tag")
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        Text(((article.keywords ?? NSSet()).allObjects as! [Keywords]).map{ $0.keyword ?? "-" }.joined(separator: ", "))
+                    }.popover(
+                        isPresented: self.$showKeywordsPopover,
+                        arrowEdge: .bottom
+                    ) { KeywordsPopoverContent(Binding($article.keywords, replacingNilWith: NSSet()))}
+                        .padding(.bottom,10)
+                    
+                    HStack(alignment: .top) {
+                        Image(systemName: "text.alignleft")
+                        Text(article.abstract ?? "no abstract")
+                            .onTapGesture {
+                                self.abstractIsExpanded.toggle()
+                            }
+                            .lineLimit(self.abstractIsExpanded ? nil: 5)
+                            .foregroundColor(article.abstract == nil ? Color.gray : Color.primary)
+                    }
+                    
+                    HStack(alignment: .top) {
+                        Image(systemName: "calendar")
+                        Text(article.published ?? Date(), style: .date)
+                            .opacity((article.published == nil ? 0.1: 1))
+                    }
+                    HStack(alignment: .top) {
+                        Image(systemName: "link")
+                        Text(article.doi?.description ?? "https://doi...")
+                    }
+                    Spacer()
+                }
+                .padding(10)
+                .frame(width: geometry.size.width)
+            }
         }
+        .padding(10)
     }
 }
 

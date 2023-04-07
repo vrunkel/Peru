@@ -41,6 +41,11 @@ class ImportXML {
             return
         }
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en")
+        
         /* for now only local check, later we need to check full database */
         var availableAuthors = Dictionary<String, Authors>()
         let authorsRequest = NSFetchRequest<Authors>()
@@ -79,7 +84,6 @@ class ImportXML {
             } else {
                 article.title = hit.titles.title.text ?? "Title"
             }
-            article.subtitle = hit["titles","secondary-title"].text
             
             let authorSet = NSMutableOrderedSet()
             for author in hit.contributors.authors.author {
@@ -118,8 +122,14 @@ class ImportXML {
             
             if let yearString = hit.dates.year.text {
                 article.year = Int16(yearString) ?? 0
-                // missing exact date, which is stored as well
+                
+                if let dateString = hit.dates["pub-dates", "date"].text {
+                    if let date = dateFormatter.date(from: dateString + " " + yearString) {
+                        article.published = date
+                    }
+                }
             }
+            
             
             if let doiURL = hit.urls["related-urls", "url"].text {
                 article.doi = URL(string:doiURL)
@@ -167,7 +177,6 @@ class ImportXML {
                 article.publishedBy = publisher
             }
             
-            
             for journal in hit.periodical {
                 if let fullTitle = journal["full-title"].text {
                     if let journal = availableJournals[fullTitle] {
@@ -182,6 +191,11 @@ class ImportXML {
                         availableJournals.updateValue(newJournal, forKey: fullTitle)
                     }
                 }
+            }
+            
+            article.subtitle = hit["titles","secondary-title"].text
+            if article.subtitle == article.journal?.name ?? "" {
+                article.subtitle = nil
             }
             
             for aKeyword in hit["keywords", "keyword"] {

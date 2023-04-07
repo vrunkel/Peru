@@ -52,7 +52,7 @@ struct ContentView: View {
         } content: {
             self.table
                 .navigationTitle(selectedFolder?.name ?? "All articles")
-                .navigationSplitViewColumnWidth(min:400, ideal:600, max: 900)
+                .navigationSplitViewColumnWidth(min:400, ideal:600, max: 2000)
                 .onChange(of: self.selection) { newValue in
                     self.selectedItem = items.filter { self.selection.contains(($0).id) }.first ?? nil
                 }

@@ -13,11 +13,13 @@
 		8B1DFC8728F070BC007A5301 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8628F070BC007A5301 /* Preview Assets.xcassets */; };
 		8B1DFC8928F070BC007A5301 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8828F070BC007A5301 /* Persistence.swift */; };
 		8B1DFC8C28F070BC007A5301 /* Peru.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8A28F070BC007A5301 /* Peru.xcdatamodeld */; };
+		8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8B62C24829DFF36D00226D47 /* WrappingHStack */; };
 		8B74875329CB742300054783 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B74875229CB742300054783 /* CustomTabView.swift */; };
 		8B7798EC29D82E8F00BB2072 /* AuthorsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7798EB29D82E8F00BB2072 /* AuthorsEditoring.swift */; };
 		8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */; };
 		8B83805E29DD768100AD4229 /* SwiftyXMLParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; };
 		8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8B83D4F829DFEA2000D3DB25 /* KeywordsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83D4F729DFEA2000D3DB25 /* KeywordsEditoring.swift */; };
 		8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8590C029D95EAB00ACB632 /* ImportXML.swift */; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
 		8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB297A29DB19A400817A14 /* ImportRIS.swift */; };
@@ -66,6 +68,7 @@
 		8B74875229CB742300054783 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
 		8B7798EB29D82E8F00BB2072 /* AuthorsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsEditoring.swift; sourceTree = "<group>"; };
 		8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalContentViews.swift; sourceTree = "<group>"; };
+		8B83D4F729DFEA2000D3DB25 /* KeywordsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordsEditoring.swift; sourceTree = "<group>"; };
 		8B8590C029D95EAB00ACB632 /* ImportXML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportXML.swift; sourceTree = "<group>"; };
 		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = ../../SwiftyXMLParser/SwiftyXMLParser.xcodeproj; sourceTree = "<group>"; };
 		8BFB297A29DB19A400817A14 /* ImportRIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRIS.swift; sourceTree = "<group>"; };
@@ -77,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BAFBDE529CE10730080E68D /* AQUI in Frameworks */,
+				8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */,
 				8B83805E29DD768100AD4229 /* SwiftyXMLParser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +113,7 @@
 				8B1DFC8128F070BC007A5301 /* ContentView.swift */,
 				8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */,
 				8B7798EB29D82E8F00BB2072 /* AuthorsEditoring.swift */,
+				8B83D4F729DFEA2000D3DB25 /* KeywordsEditoring.swift */,
 				8B1DFC8328F070BC007A5301 /* Assets.xcassets */,
 				8B1DFC8828F070BC007A5301 /* Persistence.swift */,
 				8B1DFC8D28F070BC007A5301 /* Peru.entitlements */,
@@ -164,6 +169,7 @@
 			name = Peru;
 			packageProductDependencies = (
 				8BAFBDE429CE10730080E68D /* AQUI */,
+				8B62C24829DFF36D00226D47 /* WrappingHStack */,
 			);
 			productName = Peru;
 			productReference = 8B1DFC7C28F070BC007A5301 /* Peru.app */;
@@ -195,6 +201,7 @@
 			mainGroup = 8B1DFC7328F070BC007A5301;
 			packageReferences = (
 				8BAFBDE329CE10730080E68D /* XCRemoteSwiftPackageReference "AQUI" */,
+				8B62C24729DFF36D00226D47 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = 8B1DFC7D28F070BC007A5301 /* Products */;
 			projectDirPath = "";
@@ -251,6 +258,7 @@
 				8B1DFC8228F070BC007A5301 /* ContentView.swift in Sources */,
 				8B1DFC8028F070BC007A5301 /* PeruApp.swift in Sources */,
 				8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */,
+				8B83D4F829DFEA2000D3DB25 /* KeywordsEditoring.swift in Sources */,
 				8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */,
 				8B7798EC29D82E8F00BB2072 /* AuthorsEditoring.swift in Sources */,
 				8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */,
@@ -453,6 +461,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8B62C24729DFF36D00226D47 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dkk/WrappingHStack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		8BAFBDE329CE10730080E68D /* XCRemoteSwiftPackageReference "AQUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AlanQuatermain/AQUI.git";
@@ -464,6 +480,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8B62C24829DFF36D00226D47 /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B62C24729DFF36D00226D47 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
+		};
 		8BAFBDE429CE10730080E68D /* AQUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8BAFBDE329CE10730080E68D /* XCRemoteSwiftPackageReference "AQUI" */;
