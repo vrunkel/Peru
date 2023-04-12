@@ -10,38 +10,57 @@ import CoreData
 import AQUI
 import UniformTypeIdentifiers
 
+class SearchControl {
+    var originalPredicate: NSPredicate?
+}
+
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Article.year, ascending: false)], animation: .default)
-    private var items: FetchedResults<Article>
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Collections.name, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Collections.type, ascending: true)],
         predicate: NSPredicate(format: "parent == nil"),
         animation: .default)
     private var collections: FetchedResults<Collections>
+    @State private var selectedFolder: Collections?
     
+    var searchControl = SearchControl()
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Article.year, ascending: false)], animation: .default)
+    private var items: FetchedResults<Article>
     @State private var selection = Set<Article.ID>()
     @State private var sortOrder = [KeyPathComparator(\Article.year)]
     @State var sorting: [KeyPathComparator<Article>] = [
              .init(\.year, order: SortOrder.forward)
            ]
-    
-    @State private var visibility: NavigationSplitViewVisibility = .all
-    @State private var selectedFolder: Collections?
     @State private var selectedItem: Article?
     
+    @State private var searchText: String = ""
+    enum ArticleSearchScope: String, CaseIterable {
+        case authors
+        case title
+    }
+    @State private var searchScope: ArticleSearchScope = .authors
+    
+    @State private var visibility: NavigationSplitViewVisibility = .all
+    
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $visibility) {
             List(selection: $selectedFolder) {
                 ForEach(collections, id: \.self) { collection in
-                    Section(header: Text(verbatim: collection.name ?? "---")) {
-                        if collection.children?.count ?? 0 > 0 {
-                            ForEach(Array(collection.children!) as! Array<Collections>, id: \.self) { aChild in
-                                NavigationLink(value: aChild) {
-                                    Text(verbatim: aChild.name ?? "Name")
+                    if collection.type == -1 {
+                        NavigationLink(value: collection) {
+                            Text(verbatim: collection.name ?? "Name")
+                        }
+                    } else {
+                        Section(header: Text(verbatim: collection.name ?? "---")) {
+                            if collection.children?.count ?? 0 > 0 {
+                                ForEach(Array(collection.children!) as! Array<Collections>, id: \.self) { aChild in
+                                    NavigationLink(value: aChild) {
+                                        Text(verbatim: aChild.name ?? "Name")
+                                    }
                                 }
                             }
                         }
@@ -49,14 +68,35 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Sidebar")
+            .onAppear() {
+                DispatchQueue.main.async {
+                    self.selectedFolder = self.collections.first!
+                }
+            }
+            
         } content: {
             self.table
                 .navigationTitle(selectedFolder?.name ?? "All articles")
                 .navigationSplitViewColumnWidth(min:400, ideal:600, max: 2000)
+                .onChange(of: searchText) { newValue in
+                    if newValue.isEmpty {
+                        self.items.nsPredicate = self.searchControl.originalPredicate
+                        self.searchControl.originalPredicate = nil
+                    }
+                    self.selection = Set()
+                }
                 .onChange(of: self.selection) { newValue in
                     self.selectedItem = items.filter { self.selection.contains(($0).id) }.first ?? nil
                 }
-            
+                .searchable(text: self.$searchText)
+                .searchScopes($searchScope) {
+                    ForEach(ArticleSearchScope.allCases, id: \.self) { scope in
+                        Text(scope.rawValue.capitalized)
+                    }
+                }
+                .onSubmit(of: .search) {
+                    searchPredicate(query: searchText)
+                }
         } detail: {
             if self.selection.count > 0 {
                 CustomTabView(
@@ -66,14 +106,14 @@ struct ContentView: View {
                             tabText: "View",
                             tabIconName: "eye",
                             view: AnyView(
-                                articleDetailsView(article: items.filter { self.selection.contains(($0).id) }.first!)
+                                articleDetailsView(article: items.filter { self.selection.contains(($0).id) }.first ?? Article())
                             )
                         ),
                         (
                             tabText: "Edit",
                             tabIconName: "square.and.pencil",
                             view: AnyView(
-                                articleEditView(article: items.filter { self.selection.contains(($0).id) }.first!)
+                                articleEditView(article: items.filter { self.selection.contains(($0).id) }.first ?? Article())
                                     .background(Color.white)
                             )
                         )
@@ -81,11 +121,23 @@ struct ContentView: View {
                 )
                 .navigationSplitViewColumnWidth(min:300, ideal:400, max:500)
             }
-        }//.onAppear(perform: fillStore)
+        }.onAppear(perform: fillStore)
+            .onChange(of: self.selectedFolder, perform: { newValue in
+                if newValue == nil || newValue?.type == -1 {
+                    items.nsPredicate = nil
+                } else {
+                    items.nsPredicate = NSPredicate(format: "ANY collections == %@", newValue!)
+                }
+            })
         .toolbar {
             ToolbarItem {
+                            Button(action: addCollection) {
+                                Label("Add collection", systemImage: "folder.badge.plus")
+                            }
+                        }
+            ToolbarItem {
                 Button(action: addItem) {
-                    Label("Add Item", systemImage: "plus")
+                    Label("Add Item", systemImage: "doc.badge.plus")
                 }
             }
             ToolbarItem {
@@ -130,82 +182,80 @@ struct ContentView: View {
         }
     }
     
-    /*private func fillStore() {
-        let sectionOne = Collections(context: viewContext)
-        sectionOne.name = "Collections"
-        sectionOne.canDelete = false
-        sectionOne.isSection = true
-        
-        let newCollection1 = Collections(context: viewContext)
-        newCollection1.name = "Collection1"
-        newCollection1.canDelete = true
-        newCollection1.isSection = false
-        newCollection1.parent = sectionOne
-        
-        let newCollection2 = Collections(context: viewContext)
-        newCollection2.name = "Collection2"
-        newCollection2.canDelete = true
-        newCollection2.isSection = false
-        newCollection2.parent = sectionOne
-        
-        let newCollection3 = Collections(context: viewContext)
-        newCollection3.name = "Collection3"
-        newCollection3.canDelete = true
-        newCollection3.isSection = false
-        newCollection3.parent = sectionOne
-        
-        let author1 = Authors(context: viewContext)
-        author1.lastname = "Runkel"
-        author1.firstname = "Volker"
-        
-        let author2 = Authors(context: viewContext)
-        author2.lastname = "Voigt"
-        author2.firstname = "C.C."
-        
-        let author3 = Authors(context: viewContext)
-        author3.lastname = "Scherer"
-        author3.firstname = "Cedric"
-        
-        let article1 = Article(context: viewContext)
-        article1.added = Date()
-        article1.year = 2022
-        article1.authors = [author2, author3, author1]
-        article1.title = "Modeling the power of acoustic monitoring to predict bat fatalities at wind turbines"
-        var string = ""
-        for anAuthor in article1.authors! {
-            string.append(", ")
-            string.append((anAuthor as! Authors).lastname!)
+    private func searchPredicate(query: String) {
+        if self.searchControl.originalPredicate == nil {
+            self.searchControl.originalPredicate = items.nsPredicate
+            if items.nsPredicate == nil {
+                self.searchControl.originalPredicate = NSPredicate(format: "TRUEPREDICATE")
+            }
         }
-        
-        string.removeFirst(2)
-        article1.authorsForDisplay = string
-        article1.journal = "Conservation Science and Practice"
-        article1.abstract = "Large numbers of bats are killed at wind turbines worldwide. To formulate mitigation measures such as curtailment, recent approaches relate the acoustic activity of bats around reference turbines to casualties to extrapolate fatality rates at turbines where only acoustic surveys are conducted. Here, we modeled how sensitive this approach is when spatial distributions of bats vary within the rotor-swept zone, and when the coverage of acoustic monitoring deteriorates, for example, with increasing turbine size. The predictive power of acoustic surveys was high for uniform or random distributions of bats. A concentration of bat passes around the nacelle or at the lower portion of the risk zone caused an overestimation of bat activity when ultrasonic microphones were pointed downwards at the nacelle. Conversely, a concentration of bat passes at the edge or at the top portion of the risk zone caused an underestimation of bat activity. These effects increased as the coverage of the acoustic monitoring decreased. Extrapolated fatality rates may not necessarily match with real conditions without knowledge of the spatial distribution of bats, particularly when the risk zone is poorly covered by acoustic monitoring, when spatial distributions are skewed and when turbines are large or frequencies of echolocating bats high. We argue that the predictive power of acoustic surveys is sufficiently strong for nonrandom or nonuniform distributions when validated by carcass searches and by complementary studies on the spatial distribution of bats at turbines."
-        article1.doi = URL(string: "https://doi.org/10.1111/csp2.12841")
-        
-        let article2 = Article(context: viewContext)
-        article2.added = Date()
-        article2.year = 2021
-        article2.authors = [author2, author1]
-        article2.title = "Limitations of acoustic monitoring at wind turbines to evaluate fatality risk of bats"
-        string = ""
-        for anAuthor in article2.authors! {
-            string.append(", ")
-            string.append((anAuthor as! Authors).lastname!)
+        print( NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText))
+        let predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText)
+        self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate])
+    }
+    
+    private func fillStore() {
+        if self.collections.isEmpty {
+            
+            let sectionAll = Collections(context: viewContext)
+            sectionAll.name = "All articles"
+            sectionAll.canDelete = false
+            sectionAll.isSection = false
+            sectionAll.type = -1
+            
+            let sectionOne = Collections(context: viewContext)
+            sectionOne.name = "Collections"
+            sectionOne.canDelete = false
+            sectionOne.isSection = true
+            sectionOne.type = 0
+            
+            let sectionKeywords = Collections(context: viewContext)
+            sectionKeywords.name = "Keywords"
+            sectionKeywords.canDelete = false
+            sectionKeywords.isSection = true
+            sectionKeywords.type = 1
+            
+            let sectionSmart = Collections(context: viewContext)
+            sectionSmart.name = "Smart Collections"
+            sectionSmart.canDelete = false
+            sectionSmart.isSection = true
+            sectionSmart.type = 2
+            
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
         }
-        string.removeFirst(2)
-        article2.authorsForDisplay = string
-        article2.journal = "Mammal Review"
-        
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+    }
+    
+    private func addCollection() {
+        withAnimation {
+            let newCollection = Collections(context: viewContext)
+            newCollection.name = "New collection"
+            newCollection.isSection = false
+            newCollection.canDelete = true
+            
+            for aSection in collections {
+                if aSection.type == 0 {
+                    aSection.addToChildren(newCollection)
+                    break
+                }
+            }
+
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
         }
-    }*/
+    }
     
     private func addItem() {
         withAnimation {

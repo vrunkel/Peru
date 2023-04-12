@@ -84,9 +84,9 @@ class ImportXML {
             } else {
                 article.title = hit.titles.title.text ?? "Title"
             }
-            
+                    
             let authorSet = NSMutableOrderedSet()
-            for author in hit.contributors.authors.author {
+            for author in hit.contributors.authors[0].author { // authors[1] exist only for Books = Editor!
                 if let fullname = author.text, !fullname.isEmpty {
                     let nameComponents  = fullname.components(separatedBy: ", ")
                     let key = nameComponents.first!

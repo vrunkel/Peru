@@ -16,6 +16,7 @@ struct articleDetailsView: View {
     
     @State var abstractIsExpanded: Bool = false
     @State private var showKeywordsPopover: Bool = false
+    @State private var showCollectionsPopover: Bool = false
 
     var body: some View {
         return GeometryReader { geometry in
@@ -57,16 +58,38 @@ struct articleDetailsView: View {
                         isPresented: self.$showKeywordsPopover,
                         arrowEdge: .bottom
                     ) { KeywordsPopoverContent(Binding($article.keywords, replacingNilWith: NSSet()))}
+                    
+                    HStack {
+                        Button {
+                            self.showCollectionsPopover.toggle()
+                        } label: {
+                            Image(systemName: "folder")
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        Text(((article.collections ?? NSSet()).allObjects as! [Collections]).map{ $0.name ?? "-" }.joined(separator: ", "))
+                    }.popover(
+                        isPresented: self.$showCollectionsPopover,
+                        arrowEdge: .bottom
+                    ) { CollectionsPopoverContent(Binding($article.collections, replacingNilWith: NSSet()))}
                         .padding(.bottom,10)
                     
                     HStack(alignment: .top) {
                         Image(systemName: "text.alignleft")
-                        Text(article.abstract ?? "no abstract")
-                            .onTapGesture {
+                        VStack(alignment: .trailing) {
+                            Text(article.abstract ?? "no abstract")
+                                .onTapGesture {
+                                    self.abstractIsExpanded.toggle()
+                                }
+                                .lineLimit(self.abstractIsExpanded ? nil: 5)
+                                .foregroundColor(article.abstract == nil ? Color.gray : Color.primary)
+                            Button {
                                 self.abstractIsExpanded.toggle()
+                            } label: {
+                                Text(self.abstractIsExpanded ? "Less" : "More...")
+                                    .opacity((article.abstract?.count ?? 0) > 0 ? 1 : 0)
                             }
-                            .lineLimit(self.abstractIsExpanded ? nil: 5)
-                            .foregroundColor(article.abstract == nil ? Color.gray : Color.primary)
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
                     }
                     
                     HStack(alignment: .top) {
