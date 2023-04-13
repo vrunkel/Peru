@@ -86,7 +86,7 @@ class ImportXML {
             }
                     
             let authorSet = NSMutableOrderedSet()
-            for author in hit.contributors.authors[0].author { // authors[1] exist only for Books = Editor!
+            for author in hit.contributors.authors[0].author {
                 if let fullname = author.text, !fullname.isEmpty {
                     let nameComponents  = fullname.components(separatedBy: ", ")
                     let key = nameComponents.first!
@@ -108,7 +108,6 @@ class ImportXML {
                     }
                 }
             }
-            
             if authorSet.count > 0 {
                 article.authors = NSOrderedSet(orderedSet: authorSet)
                 var string = ""
@@ -118,6 +117,63 @@ class ImportXML {
                 }
                 string.removeFirst(2)
                 article.authorsForDisplay = string
+            }
+            
+            // authors[1] exist only for Books = Editor!
+            let editorsSet = NSMutableOrderedSet()
+            for author in hit.contributors.authors[1].author {
+                if let fullname = author.text, !fullname.isEmpty {
+                    let nameComponents  = fullname.components(separatedBy: ", ")
+                    let key = nameComponents.first!
+                    if let author = availableAuthors[key] {
+                        editorsSet.add(author)
+                    }
+                    else {
+                        let author = Authors(context: moc)
+                        author.lastname = key
+                        if nameComponents.count > 1 {
+                            author.firstname = nameComponents[1].components(separatedBy: " ").first
+                            if nameComponents[1].components(separatedBy: " ").count > 2 {
+                                author.middlenames = nameComponents[1].components(separatedBy: " ")[1]
+                            }
+                        }
+                        
+                        editorsSet.add(author)
+                        availableAuthors.updateValue(author, forKey: key)
+                    }
+                }
+            }
+            if editorsSet.count > 0 {
+                article.editors = NSOrderedSet(orderedSet: editorsSet)
+            }
+            
+            // secondary-authors can hold the editors optionally
+            if editorsSet.set.isEmpty {
+                for author in hit.contributors["secondary-authors"].author {
+                    if let fullname = author.text, !fullname.isEmpty {
+                        let nameComponents  = fullname.components(separatedBy: ", ")
+                        let key = nameComponents.first!
+                        if let author = availableAuthors[key] {
+                            editorsSet.add(author)
+                        }
+                        else {
+                            let author = Authors(context: moc)
+                            author.lastname = key
+                            if nameComponents.count > 1 {
+                                author.firstname = nameComponents[1].components(separatedBy: " ").first
+                                if nameComponents[1].components(separatedBy: " ").count > 2 {
+                                    author.middlenames = nameComponents[1].components(separatedBy: " ")[1]
+                                }
+                            }
+                            
+                            editorsSet.add(author)
+                            availableAuthors.updateValue(author, forKey: key)
+                        }
+                    }
+                }
+                if editorsSet.count > 0 {
+                    article.editors = NSOrderedSet(orderedSet: editorsSet)
+                }
             }
             
             if let yearString = hit.dates.year.text {

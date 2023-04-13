@@ -9,7 +9,6 @@
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="doi" optional="YES" attributeType="URI"/>
         <attribute name="edition" optional="YES" attributeType="String"/>
-        <attribute name="editors" optional="YES" attributeType="String"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
         <attribute name="issue" optional="YES" attributeType="String"/>
         <attribute name="pages" optional="YES" attributeType="String"/>
@@ -23,8 +22,9 @@
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="volume" optional="YES" attributeType="String"/>
         <attribute name="year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="authors" optional="YES" toMany="YES" minCount="1" maxCount="100" deletionRule="Nullify" ordered="YES" destinationEntity="Authors" inverseName="items" inverseEntity="Authors"/>
+        <relationship name="authors" optional="YES" toMany="YES" minCount="1" maxCount="100" deletionRule="Nullify" ordered="YES" destinationEntity="Authors"/>
         <relationship name="collections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collections" inverseName="articles" inverseEntity="Collections"/>
+        <relationship name="editors" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Authors" inverseName="items" inverseEntity="Authors"/>
         <relationship name="journal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Journal" inverseName="myArticles" inverseEntity="Journal"/>
         <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keywords" inverseName="items" inverseEntity="Keywords"/>
         <relationship name="notes" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Notes" inverseName="item" inverseEntity="Notes"/>
@@ -35,7 +35,7 @@
         <attribute name="lastname" attributeType="String" defaultValueString="Lastname"/>
         <attribute name="middlenames" optional="YES" attributeType="String"/>
         <attribute name="orderID" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="authors" inverseEntity="Article"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="editors" inverseEntity="Article"/>
     </entity>
     <entity name="Collections" representedClassName="Collections" syncable="YES" codeGenerationType="class">
         <attribute name="canDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>

@@ -28,13 +28,10 @@ struct ContentView: View {
     var searchControl = SearchControl()
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Article.year, ascending: false)], animation: .default)
+        entity: Article.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Article.year, ascending: false)], predicate: NSPredicate(format: "TRUEPREDICATE"), animation: .default)
     private var items: FetchedResults<Article>
     @State private var selection = Set<Article.ID>()
-    @State private var sortOrder = [KeyPathComparator(\Article.year)]
-    @State var sorting: [KeyPathComparator<Article>] = [
-             .init(\.year, order: SortOrder.forward)
-           ]
+    
     @State private var selectedItem: Article?
     
     @State private var searchText: String = ""
@@ -148,7 +145,7 @@ struct ContentView: View {
         }
     }
     
-    var table: some View {
+    /*var table: some View {
         Table(selection: $selection, sortOrder: $items.sortDescriptors) {
             TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
             TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
@@ -166,7 +163,23 @@ struct ContentView: View {
         ForEach(items) { article in
             TableRow(article)
         }
-    }}
+    }}*/
+    
+    var table: some View {
+        Table(items, selection: $selection, sortOrder: $items.sortDescriptors) {
+            TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
+            TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
+            TableColumn("Year", value: \.year) { article in
+                Text(String(article.year))
+            }.width(min:50, ideal:50, max:50)
+            TableColumn("Journal") { article in
+                Text(article.journal?.name ?? "---")
+            }.width(min:30, ideal:50, max:200)
+            TableColumn("Publisher") { article in
+                Text(article.publishedBy ?? "---")
+            }.width(min:30, ideal:50, max:200)
+        }
+    }
     
     private func importXML() {
         let openPanel = NSOpenPanel()
@@ -189,9 +202,15 @@ struct ContentView: View {
                 self.searchControl.originalPredicate = NSPredicate(format: "TRUEPREDICATE")
             }
         }
-        print( NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText))
-        let predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText)
-        self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate])
+        var predicate: NSPredicate?
+        if self.searchScope == .title {
+            predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText)
+        } else if searchScope == .authors {
+            predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.authorsForDisplay), self.searchText)
+        }
+        DispatchQueue.main.async {
+            self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate!])
+        }
     }
     
     private func fillStore() {
