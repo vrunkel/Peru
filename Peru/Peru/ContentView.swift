@@ -24,6 +24,7 @@ struct ContentView: View {
         animation: .default)
     private var collections: FetchedResults<Collections>
     @State private var selectedFolder: Collections?
+    @State private var manualCollectionPopoverIsShown: Bool = false
     
     var searchControl = SearchControl()
     
@@ -45,31 +46,21 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visibility) {
-            List(selection: $selectedFolder) {
-                ForEach(collections, id: \.self) { collection in
-                    if collection.type == -1 {
-                        NavigationLink(value: collection) {
-                            Text(verbatim: collection.name ?? "Name")
-                        }
-                    } else {
-                        Section(header: Text(verbatim: collection.name ?? "---")) {
-                            if collection.children?.count ?? 0 > 0 {
-                                ForEach(Array(collection.children!) as! Array<Collections>, id: \.self) { aChild in
-                                    NavigationLink(value: aChild) {
-                                        Text(verbatim: aChild.name ?? "Name")
-                                    }
-                                }
-                            }
-                        }
+            self.collectionsList
+                .navigationTitle("Sidebar")
+                .onAppear() {
+                    DispatchQueue.main.async {
+                        self.selectedFolder = self.collections.first!
                     }
                 }
-            }
-            .navigationTitle("Sidebar")
-            .onAppear() {
-                DispatchQueue.main.async {
-                    self.selectedFolder = self.collections.first!
+                .popover(isPresented: $manualCollectionPopoverIsShown,
+                         attachmentAnchor: .point(.bottom),
+                         arrowEdge: .top) {
+                    EditCollectionsPopoverContent(Binding($selectedFolder, replacingNilWith: Collections()))
                 }
-            }
+                         .onDeleteCommand {
+                             print("Delete")
+                         }
             
         } content: {
             self.table
@@ -126,44 +117,73 @@ struct ContentView: View {
                     items.nsPredicate = NSPredicate(format: "ANY collections == %@", newValue!)
                 }
             })
-        .toolbar {
-            ToolbarItem {
-                            Button(action: addCollection) {
-                                Label("Add collection", systemImage: "folder.badge.plus")
-                            }
-                        }
-            ToolbarItem {
-                Button(action: addItem) {
-                    Label("Add Item", systemImage: "doc.badge.plus")
+            .toolbar {
+                ToolbarItem {
+                    Button(action: addCollection) {
+                        Label("Add collection", systemImage: "folder.badge.plus")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: removeCollection) {
+                        Label("Remove collection", systemImage: "folder.badge.minus")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: addItem) {
+                        Label("Add Item", systemImage: "doc.badge.plus")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: importXML) {
+                        Label("Import XML", systemImage: "square.and.arrow.down")
+                    }
                 }
             }
-            ToolbarItem {
-                Button(action: importXML) {
-                    Label("Import XML", systemImage: "square.and.arrow.down")
+    }
+    
+    /*var table: some View {
+     Table(selection: $selection, sortOrder: $items.sortDescriptors) {
+     TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
+     TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
+     TableColumn("Year", value: \.year) { article in
+     Text(String(article.year))
+     }.width(min:50, ideal:50, max:50)
+     TableColumn("Journal") { article in
+     Text(article.journal?.name ?? "---")
+     }.width(min:30, ideal:50, max:200)
+     TableColumn("Publisher") { article in
+     Text(article.publishedBy ?? "---")
+     }.width(min:30, ideal:50, max:200)
+     }
+     rows: {
+     ForEach(items) { article in
+     TableRow(article)
+     }
+     }}*/
+    
+    var collectionsList: some View {
+        List(selection: $selectedFolder) {
+            ForEach(collections, id: \.self) { collection in
+                if collection.type == -1 {
+                    NavigationLink(value: collection) {
+                        Text(verbatim: collection.name ?? "Name")
+                    }
+                } else {
+                    Section(header: Text(verbatim: collection.name ?? "---")) {
+                        if collection.children?.count ?? 0 > 0 {
+                            ForEach(Array(collection.children!) as! Array<Collections>, id: \.self) { aChild in
+                                NavigationLink(value: aChild) {
+                                    Text(verbatim: aChild.name ?? "Name")
+                                }
+                            }.onDelete { indexSet in
+                                print(indexSet)
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    
-    /*var table: some View {
-        Table(selection: $selection, sortOrder: $items.sortDescriptors) {
-            TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
-            TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
-            TableColumn("Year", value: \.year) { article in
-                Text(String(article.year))
-            }.width(min:50, ideal:50, max:50)
-            TableColumn("Journal") { article in
-                Text(article.journal?.name ?? "---")
-            }.width(min:30, ideal:50, max:200)
-            TableColumn("Publisher") { article in
-                Text(article.publishedBy ?? "---")
-            }.width(min:30, ideal:50, max:200)
-        }
-    rows: {
-        ForEach(items) { article in
-            TableRow(article)
-        }
-    }}*/
     
     var table: some View {
         Table(items, selection: $selection, sortOrder: $items.sortDescriptors) {
@@ -208,9 +228,7 @@ struct ContentView: View {
         } else if searchScope == .authors {
             predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.authorsForDisplay), self.searchText)
         }
-        DispatchQueue.main.async {
-            self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate!])
-        }
+        self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate!])
     }
     
     private func fillStore() {
@@ -264,7 +282,11 @@ struct ContentView: View {
                     break
                 }
             }
-
+            
+            self.selectedFolder = newCollection
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                self.manualCollectionPopoverIsShown = true
+            }
             do {
                 try viewContext.save()
             } catch {
@@ -276,11 +298,17 @@ struct ContentView: View {
         }
     }
     
+    private func removeCollection() {
+        guard let selectedFolder = self.selectedFolder else { return }
+        if !selectedFolder.canDelete { return }
+        viewContext.delete(selectedFolder)
+    }
+    
     private func addItem() {
         withAnimation {
             let newItem = Article(context: viewContext)
             newItem.added = Date()
-
+            
             do {
                 try viewContext.save()
             } catch {
@@ -291,12 +319,12 @@ struct ContentView: View {
             }
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         self.selection = Set()
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
-
+            
             do {
                 try viewContext.save()
             } catch {
