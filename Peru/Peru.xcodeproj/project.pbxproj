@@ -14,6 +14,7 @@
 		8B1DFC8928F070BC007A5301 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8828F070BC007A5301 /* Persistence.swift */; };
 		8B1DFC8C28F070BC007A5301 /* Peru.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8A28F070BC007A5301 /* Peru.xcdatamodeld */; };
 		8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8B62C24829DFF36D00226D47 /* WrappingHStack */; };
+		8B72206529E92CEC00FA0382 /* EditCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B72206429E92CEC00FA0382 /* EditCollection.swift */; };
 		8B74875329CB742300054783 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B74875229CB742300054783 /* CustomTabView.swift */; };
 		8B7798EC29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */; };
 		8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */; };
@@ -22,7 +23,6 @@
 		8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */; };
 		8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8590C029D95EAB00ACB632 /* ImportXML.swift */; };
-		8B88307C29E479C900574FBE /* EditCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B88307B29E479C900574FBE /* EditCollection.swift */; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
 		8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB297A29DB19A400817A14 /* ImportRIS.swift */; };
 /* End PBXBuildFile section */
@@ -67,6 +67,7 @@
 		8B1DFC8828F070BC007A5301 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		8B1DFC8B28F070BC007A5301 /* Peru.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Peru.xcdatamodel; sourceTree = "<group>"; };
 		8B1DFC8D28F070BC007A5301 /* Peru.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Peru.entitlements; sourceTree = "<group>"; };
+		8B72206429E92CEC00FA0382 /* EditCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCollection.swift; sourceTree = "<group>"; };
 		8B74875229CB742300054783 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
 		8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleAuthorsEditoring.swift; sourceTree = "<group>"; };
 		8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalContentViews.swift; sourceTree = "<group>"; };
@@ -74,7 +75,6 @@
 		8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleKeywordsEditoring.swift; sourceTree = "<group>"; };
 		8B8590C029D95EAB00ACB632 /* ImportXML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportXML.swift; sourceTree = "<group>"; };
 		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = ../../SwiftyXMLParser/SwiftyXMLParser.xcodeproj; sourceTree = "<group>"; };
-		8B88307B29E479C900574FBE /* EditCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCollection.swift; sourceTree = "<group>"; };
 		8BFB297A29DB19A400817A14 /* ImportRIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRIS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,7 +119,7 @@
 				8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */,
 				8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */,
 				8B7E1F8029E53467006E0816 /* ArticleCollectionsEditoring.swift */,
-				8B88307B29E479C900574FBE /* EditCollection.swift */,
+				8B72206429E92CEC00FA0382 /* EditCollection.swift */,
 				8B1DFC8328F070BC007A5301 /* Assets.xcassets */,
 				8B1DFC8828F070BC007A5301 /* Persistence.swift */,
 				8B1DFC8D28F070BC007A5301 /* Peru.entitlements */,
@@ -266,8 +266,8 @@
 				8B7E1F8129E53467006E0816 /* ArticleCollectionsEditoring.swift in Sources */,
 				8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */,
 				8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */,
-				8B88307C29E479C900574FBE /* EditCollection.swift in Sources */,
 				8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */,
+				8B72206529E92CEC00FA0382 /* EditCollection.swift in Sources */,
 				8B7798EC29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift in Sources */,
 				8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */,
 			);

@@ -54,13 +54,14 @@ struct ContentView: View {
                     }
                 }
                 .popover(isPresented: $manualCollectionPopoverIsShown,
-                         attachmentAnchor: .point(.bottom),
-                         arrowEdge: .top) {
-                    EditCollectionsPopoverContent(Binding($selectedFolder, replacingNilWith: Collections()))
+                         arrowEdge: .trailing) {
+                    EditCollectionsPopoverContent(currentCollection: selectedFolder!)
+                        .padding(10)
+                    //EditCollectionsPopoverContent(currentCollection: Binding($selectedFolder)!)
                 }
-                         .onDeleteCommand {
-                             print("Delete")
-                         }
+                .onDeleteCommand {
+                    print("Delete")
+                }
             
         } content: {
             self.table
@@ -94,7 +95,9 @@ struct ContentView: View {
                             tabText: "View",
                             tabIconName: "eye",
                             view: AnyView(
+                                
                                 articleDetailsView(article: items.filter { self.selection.contains(($0).id) }.first ?? Article())
+                                
                             )
                         ),
                         (
@@ -108,9 +111,12 @@ struct ContentView: View {
                     ]
                 )
                 .navigationSplitViewColumnWidth(min:300, ideal:400, max:500)
+            } else {
+                Text("No selection")
             }
         }.onAppear(perform: fillStore)
             .onChange(of: self.selectedFolder, perform: { newValue in
+                self.selection = Set()
                 if newValue == nil || newValue?.type == -1 {
                     items.nsPredicate = nil
                 } else {
@@ -284,11 +290,13 @@ struct ContentView: View {
             }
             
             self.selectedFolder = newCollection
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
-                self.manualCollectionPopoverIsShown = true
-            }
             do {
                 try viewContext.save()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                    self.selectedFolder = newCollection
+                    self.manualCollectionPopoverIsShown = true
+                }
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -300,7 +308,7 @@ struct ContentView: View {
     
     private func removeCollection() {
         guard let selectedFolder = self.selectedFolder else { return }
-        if !selectedFolder.canDelete { return }
+        if !selectedFolder.canDelete { return }
         viewContext.delete(selectedFolder)
     }
     

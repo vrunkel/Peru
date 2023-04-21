@@ -13,15 +13,11 @@ import UniformTypeIdentifiers
 
 struct EditCollectionsPopoverContent: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-    @Binding var currentCollection: Collections
-    
-    init(_ inputCollection: Binding<Collections>) {
-        self._currentCollection = inputCollection
-    }
+    @ObservedObject var currentCollection: Collections
     
     var body: some View {
-        Text("Edit collection")
-        TextField("New collection", text: Binding($currentCollection.name,replacingNilWith: ""))
+        Text("Collection name")
+        TextField("New collection", text: Binding($currentCollection.name, replacingNilWith: ""))
+            .frame(width: 200)
     }
 }
