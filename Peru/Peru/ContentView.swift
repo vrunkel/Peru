@@ -57,7 +57,6 @@ struct ContentView: View {
                          arrowEdge: .trailing) {
                     EditCollectionsPopoverContent(currentCollection: selectedFolder!)
                         .padding(10)
-                    //EditCollectionsPopoverContent(currentCollection: Binding($selectedFolder)!)
                 }
                 .onDeleteCommand {
                     print("Delete")
