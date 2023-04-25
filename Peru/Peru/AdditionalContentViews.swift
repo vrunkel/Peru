@@ -108,7 +108,7 @@ struct articleDetailsView: View {
                         Image(systemName: "doc.text")
                             .onTapGesture {
                                 if let relatedFile = article.relatedFile {
-                                    openWindow(id: "PDFPreview", value: relatedFile)
+                                    openWindow(id: "PDFPreview", value: article.id)
                                 }
                             }
                         Text(article.relatedFile?.description ?? "no file linked")

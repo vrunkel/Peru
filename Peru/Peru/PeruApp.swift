@@ -21,10 +21,13 @@ struct PeruApp: App {
                 .environment(\.appSupportPDFs, AppSupportPDFURL.defaultValue)
                 .frame(minWidth: 1280, maxWidth: .infinity, minHeight: 800, maxHeight: .infinity)
         }
-        WindowGroup(id: "PDFPreview", for: URL.self) { $pdfURL in
-            if let url = pdfURL, let pdfDocument = PDFDocument(url: url) {
+        WindowGroup(id: "PDFPreview", for: Article.ID.self) { $anID in
+            if let uriID = anID, let moID = persistenceController.container.persistentStoreCoordinator.managedObjectID(forURIRepresentation: uriID),
+            let article = persistenceController.container.viewContext.object(with: moID) as? Article,
+               let url = article.relatedFile, let  pdfDocument = PDFDocument(url: url) {
                 PDFPreview(pdfDocument: pdfDocument)
                     .frame(minWidth: 800, maxWidth: .infinity, minHeight: 800, maxHeight: .infinity)
+                    .navigationTitle(article.title ?? "---")
             }
         }
     }
@@ -40,6 +43,13 @@ extension EnvironmentValues {
         set { self[AppSupportPDFURL.self] = newValue }
     }
 }
+
+extension Article {
+    public var id: URL {
+        self.objectID.uriRepresentation()
+    }
+}
+
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     

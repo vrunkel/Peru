@@ -40,6 +40,22 @@ struct PDFPreview: View {
                         }
 
                     }
+                    ToolbarItem () {
+                        HStack {
+                            Divider().frame(height: 32)
+                        }
+                    }
+                    ToolbarItem() {
+                        Button {
+                            if (self.searchResults?.count ?? 0) > 0 && searchPos > 1 {
+                                searchPos -= 1
+                                current.send(self.searchResults![searchPos])
+                            }
+                            
+                        } label: {
+                            Image(systemName: "arrow.left.circle")
+                        }
+                    }
                     ToolbarItem() {
                         Button {
                             if searchPos < (self.searchResults?.count ?? 0) - 2 {
@@ -50,7 +66,6 @@ struct PDFPreview: View {
                         } label: {
                             Image(systemName: "arrow.right.circle")
                         }
-
                     }
                 }
                 .onChange(of: searchText) { newValue in
