@@ -17,6 +17,7 @@ class SearchControl {
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.appSupportPDFs) private var appSupportPDFURL
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Collections.type, ascending: true)],
@@ -57,9 +58,6 @@ struct ContentView: View {
                          arrowEdge: .trailing) {
                     EditCollectionsPopoverContent(currentCollection: selectedFolder!)
                         .padding(10)
-                }
-                .onDeleteCommand {
-                    print("Delete")
                 }
             
         } content: {
@@ -180,8 +178,6 @@ struct ContentView: View {
                                 NavigationLink(value: aChild) {
                                     Text(verbatim: aChild.name ?? "Name")
                                 }
-                            }.onDelete { indexSet in
-                                print(indexSet)
                             }
                         }
                     }
@@ -203,10 +199,35 @@ struct ContentView: View {
             TableColumn("Publisher") { article in
                 Text(article.publishedBy ?? "---")
             }.width(min:30, ideal:50, max:200)
+        }.onDeleteCommand {
+            self.deleteArticles()
         }
     }
     
     private func importXML() {
+        
+        let openPanel = NSOpenPanel()
+        openPanel.message = "Authorize access to folder containing PDF files for your literature"
+        openPanel.prompt = "Authorize"
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = true
+        openPanel.canCreateDirectories = false
+        
+        openPanel.begin { result in
+            // WARNING: It's absolutely necessary to access NSOpenPanel.url property to get access
+            guard result == .OK, let url = openPanel.url else {
+                // HANDLE ERROR HERE ...
+                return
+            }
+            if url.startAccessingSecurityScopedResource() {
+                self.startXMLImport()
+            }
+            url.stopAccessingSecurityScopedResource()
+        }
+    
+    }
+    
+    private func startXMLImport() {
         let openPanel = NSOpenPanel()
         openPanel.allowedContentTypes = [UTType.xml]
         openPanel.allowsMultipleSelection = false
@@ -214,7 +235,7 @@ struct ContentView: View {
         openPanel.canChooseFiles = true
         let response = openPanel.runModal()
         if response == .OK {
-            let xmlImportParser = ImportXML(moc: viewContext)
+            let xmlImportParser = ImportXML(moc: viewContext, appSupportURL: appSupportPDFURL)
             xmlImportParser.parseXML(at: openPanel.url!)
             //openPanel.url
         }
@@ -314,8 +335,27 @@ struct ContentView: View {
     private func addItem() {
         withAnimation {
             let newItem = Article(context: viewContext)
+            newItem.uuid = UUID().uuidString
             newItem.added = Date()
             
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    private func deleteArticles() {
+        let articlesToDelete = self.selection
+        self.selection = Set()
+        withAnimation {
+            items.filter({ article in
+                articlesToDelete.contains(article.id)
+            }).forEach(viewContext.delete)
             do {
                 try viewContext.save()
             } catch {

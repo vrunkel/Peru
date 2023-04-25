@@ -11,6 +11,8 @@ import SwiftUI
 
 class ImportXML {
     
+    private var appSupportPDFURL: URL?
+    
     private var moc: NSManagedObjectContext!
     
     var xml: XML.Accessor?
@@ -18,6 +20,12 @@ class ImportXML {
     init(moc: NSManagedObjectContext) {
         self.moc = moc
     }
+    
+    init(moc: NSManagedObjectContext, appSupportURL: URL) {
+        self.moc = moc
+        self.appSupportPDFURL = appSupportURL
+    }
+    
     
     func parseXML(at url: URL) {
         guard var xmlStr = try? String(contentsOf: url, encoding: .utf8) else {
@@ -40,6 +48,8 @@ class ImportXML {
         guard let xml = self.xml else {
             return
         }
+        
+        let fm = FileManager.default
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -78,7 +88,8 @@ class ImportXML {
         var count = 0
         for hit in xml["xml", "records", "record"] {
             let article = Article(context: moc)
-            //article.title = CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (hit.titles.title.text ?? "Title") as CFString, nil) as String?
+            article.uuid = UUID().uuidString
+            article.added = Date()
             if let attribString = try? AttributedString(markdown: (hit.titles.title.text ?? "Title")) {
                 article.title = String(attribString.characters)
             } else {
@@ -189,7 +200,24 @@ class ImportXML {
             
             if let doiURL = hit.urls["related-urls", "url"].text {
                 article.doi = URL(string:doiURL)
-                // pdf URLS for pdf import
+            }
+            
+            if let pdfURL = hit.urls["pdf-urls", "url"].text {
+                if let sourceURL = URL(string: pdfURL), fm.fileExists(atPath: sourceURL.path) {
+                    do {
+                        var destinationURL = appSupportPDFURL!.appendingPathComponent(article.uuid!)
+                        if !fm.fileExists(atPath: destinationURL.path) {
+                            try fm.createDirectory(at: destinationURL, withIntermediateDirectories: true)
+                        }
+                        destinationURL.appendPathComponent(sourceURL.lastPathComponent)
+                        
+                        try fm.copyItem(at: sourceURL, to: destinationURL)
+                        article.relatedFile = destinationURL
+                    }
+                    catch let error {
+                        print(error)
+                    }
+                }
             }
             
             let type = hit["ref-type"].attributes

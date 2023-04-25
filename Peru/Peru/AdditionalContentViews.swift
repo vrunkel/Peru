@@ -11,6 +11,9 @@ import AQUI
 import UniformTypeIdentifiers
 
 struct articleDetailsView: View {
+    
+    @Environment(\.openWindow) var openWindow
+    
     @ObservedObject var article: Article
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
@@ -100,6 +103,15 @@ struct articleDetailsView: View {
                     HStack(alignment: .top) {
                         Image(systemName: "link")
                         Text(article.doi?.description ?? "https://doi...")
+                    }
+                    HStack(alignment: .top) {
+                        Image(systemName: "doc.text")
+                            .onTapGesture {
+                                if let relatedFile = article.relatedFile {
+                                    openWindow(id: "PDFPreview", value: relatedFile)
+                                }
+                            }
+                        Text(article.relatedFile?.description ?? "no file linked")
                     }
                     Spacer()
                 }
