@@ -46,6 +46,7 @@
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="100" usesScalarValueType="YES"/>
         <relationship name="articles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="collections" inverseEntity="Article"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collections" inverseName="parent" inverseEntity="Collections"/>
+        <relationship name="keyword" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Keywords" inverseName="collection" inverseEntity="Keywords"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collections" inverseName="children" inverseEntity="Collections"/>
     </entity>
     <entity name="Journal" representedClassName="Journal" syncable="YES" codeGenerationType="class">
@@ -55,6 +56,7 @@
     </entity>
     <entity name="Keywords" representedClassName="Keywords" syncable="YES" codeGenerationType="class">
         <attribute name="keyword" attributeType="String" defaultValueString="Keyword"/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Collections" inverseName="keyword" inverseEntity="Collections"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="keywords" inverseEntity="Article"/>
     </entity>
     <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">

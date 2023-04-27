@@ -85,7 +85,7 @@ struct ContentView: View {
                     searchPredicate(query: searchText)
                 }
         } detail: {
-            if self.selection.count > 0 {
+            if self.selection.count > 0 && self.items.count > 0 {
                 CustomTabView(
                     tabBarPosition: .top,
                     content: [
@@ -93,9 +93,7 @@ struct ContentView: View {
                             tabText: "View",
                             tabIconName: "eye",
                             view: AnyView(
-                                
                                 articleDetailsView(article: items.filter { self.selection.contains(($0).id) }.first ?? Article())
-                                
                             )
                         ),
                         (
@@ -122,7 +120,8 @@ struct ContentView: View {
                         items.nsPredicate = NSPredicate(format: "ANY collections == %@", newValue!)
                     }
                     else if newValue!.type == 1 {
-                        items.nsPredicate = NSPredicate(format: "ANY keywords.keyword == %@", newValue!.name!)
+                        //items.nsPredicate = NSPredicate(format: "ANY keywords.keyword == %@", newValue!.name!)
+                        items.nsPredicate = NSPredicate(format: "ANY keywords == %@", newValue!.keyword!)
                     }
                 }
             })
@@ -307,6 +306,7 @@ struct ContentView: View {
                 for aKeyword in keywordList {
                     let newCollection = Collections(context: viewContext)
                     newCollection.name = aKeyword.keyword
+                    newCollection.keyword = aKeyword
                     newCollection.isSection = false
                     newCollection.canDelete = false
                     newCollection.type = 1

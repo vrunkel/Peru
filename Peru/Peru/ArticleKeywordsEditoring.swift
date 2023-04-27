@@ -66,11 +66,29 @@ struct KeywordsPopoverContent: View {
                     Button {
                         let keyword = Keywords(context: viewContext)
                         keyword.keyword = "Keyword"
+                        let newCollection = Collections(context: viewContext)
+                        newCollection.name = keyword.keyword
+                        newCollection.keyword = keyword
+                        newCollection.isSection = false
+                        newCollection.canDelete = false
+                        newCollection.type = 1
+                        
+                        // FETCH keywordCollection
+                        let keyWordCollectionFetchRequest = Collections.fetchRequest()
+                        keyWordCollectionFetchRequest.predicate = NSPredicate(format: "type == 1 && isSection == TRUE")
+                        if let collectionsList = try? viewContext.fetch(keyWordCollectionFetchRequest) {
+                            collectionsList.first!.addToChildren(newCollection)
+                        }
+                        
+                        //keyWordSection!.addToChildren(newCollection)
                         self.selectedKeyword = keyword
                     } label: {
                         Image(systemName: "plus.square")
                     }.buttonStyle(BorderlessButtonStyle())
                     Button {
+                        if self.selectedKeyword?.collection != nil {
+                            viewContext.delete(self.selectedKeyword!.collection!)
+                        }
                         viewContext.delete(self.selectedKeyword!)
                         self.selectedKeyword = nil
                     } label: {
@@ -119,6 +137,11 @@ struct KeywordsPopoverContent: View {
         .onChange(of: anyOfMultiple, perform: { newValue in
             if self.selectedKeyword != nil {
                 self.selectedKeyword!.keyword = self.keyword
+            }
+        })
+        .onChange(of: keyword, perform: { newValue in
+            if self.selectedKeyword != nil {
+                self.selectedKeyword!.collection?.name = newValue
             }
         })
         .frame(minWidth: 250, idealWidth: 250, maxWidth: 300, minHeight: 250, idealHeight: 350, maxHeight: 500, alignment: .leading)
