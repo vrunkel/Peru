@@ -21,9 +21,13 @@ struct PeruApp: App {
                 .environment(\.appSupportPDFs, AppSupportPDFURL.defaultValue)
                 .frame(minWidth: 1280, maxWidth: .infinity, minHeight: 800, maxHeight: .infinity)
         }
+        .commands {
+            PeruCommands()
+        }
+        
         WindowGroup("PDF Preview", id: "PDFPreview", for: Article.ID.self) { $anID in
             if let uriID = anID, let moID = persistenceController.container.persistentStoreCoordinator.managedObjectID(forURIRepresentation: uriID),
-            let article = persistenceController.container.viewContext.object(with: moID) as? Article,
+               let article = persistenceController.container.viewContext.object(with: moID) as? Article,
                let url = article.relatedFile, let  pdfDocument = PDFDocument(url: url) {
                 PDFPreview(pdfDocument: pdfDocument)
                     .frame(minWidth: 800, maxWidth: .infinity, minHeight: 800, maxHeight: .infinity)

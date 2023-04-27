@@ -54,3 +54,16 @@ struct PersistenceController {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 }
+
+extension Collections {
+    
+    var sortedChildren: Array<Collections>? {
+        get {
+            if children?.count ?? 0 < 1 {
+                return nil
+            }
+            return (Array(self.children!) as! Array<Collections>).sorted() { $0.name ?? "" < $1.name ?? "" }
+        }
+    }
+    
+}

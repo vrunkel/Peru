@@ -14,6 +14,7 @@
 		8B1DFC8928F070BC007A5301 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8828F070BC007A5301 /* Persistence.swift */; };
 		8B1DFC8C28F070BC007A5301 /* Peru.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8A28F070BC007A5301 /* Peru.xcdatamodeld */; };
 		8B51775F29F7B33F008701CC /* PDFPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B51775E29F7B33F008701CC /* PDFPreview.swift */; };
+		8B51776129F82939008701CC /* PeruCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B51776029F82939008701CC /* PeruCommands.swift */; };
 		8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8B62C24829DFF36D00226D47 /* WrappingHStack */; };
 		8B72206529E92CEC00FA0382 /* EditCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B72206429E92CEC00FA0382 /* EditCollection.swift */; };
 		8B74875329CB742300054783 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B74875229CB742300054783 /* CustomTabView.swift */; };
@@ -69,6 +70,7 @@
 		8B1DFC8B28F070BC007A5301 /* Peru.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Peru.xcdatamodel; sourceTree = "<group>"; };
 		8B1DFC8D28F070BC007A5301 /* Peru.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Peru.entitlements; sourceTree = "<group>"; };
 		8B51775E29F7B33F008701CC /* PDFPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPreview.swift; sourceTree = "<group>"; };
+		8B51776029F82939008701CC /* PeruCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeruCommands.swift; sourceTree = "<group>"; };
 		8B72206429E92CEC00FA0382 /* EditCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCollection.swift; sourceTree = "<group>"; };
 		8B74875229CB742300054783 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
 		8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleAuthorsEditoring.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				8B1DFC7F28F070BC007A5301 /* PeruApp.swift */,
+				8B51776029F82939008701CC /* PeruCommands.swift */,
 				8B1DFC8128F070BC007A5301 /* ContentView.swift */,
 				8B7B4D8029CED6B400593EBF /* AdditionalContentViews.swift */,
 				8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */,
@@ -266,6 +269,7 @@
 				8B74875329CB742300054783 /* CustomTabView.swift in Sources */,
 				8B51775F29F7B33F008701CC /* PDFPreview.swift in Sources */,
 				8B1DFC8228F070BC007A5301 /* ContentView.swift in Sources */,
+				8B51776129F82939008701CC /* PeruCommands.swift in Sources */,
 				8B1DFC8028F070BC007A5301 /* PeruApp.swift in Sources */,
 				8B7E1F8129E53467006E0816 /* ArticleCollectionsEditoring.swift in Sources */,
 				8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */,

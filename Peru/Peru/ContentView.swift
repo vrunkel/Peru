@@ -40,6 +40,7 @@ struct ContentView: View {
     enum ArticleSearchScope: String, CaseIterable {
         case authors
         case title
+        case keywords
     }
     @State private var searchScope: ArticleSearchScope = .authors
     
@@ -117,7 +118,12 @@ struct ContentView: View {
                 if newValue == nil || newValue?.type == -1 {
                     items.nsPredicate = nil
                 } else {
-                    items.nsPredicate = NSPredicate(format: "ANY collections == %@", newValue!)
+                    if newValue!.type == 0 {
+                        items.nsPredicate = NSPredicate(format: "ANY collections == %@", newValue!)
+                    }
+                    else if newValue!.type == 1 {
+                        items.nsPredicate = NSPredicate(format: "ANY keywords.keyword == %@", newValue!.name!)
+                    }
                 }
             })
             .toolbar {
@@ -143,27 +149,7 @@ struct ContentView: View {
                 }
             }
     }
-    
-    /*var table: some View {
-     Table(selection: $selection, sortOrder: $items.sortDescriptors) {
-     TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
-     TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
-     TableColumn("Year", value: \.year) { article in
-     Text(String(article.year))
-     }.width(min:50, ideal:50, max:50)
-     TableColumn("Journal") { article in
-     Text(article.journal?.name ?? "---")
-     }.width(min:30, ideal:50, max:200)
-     TableColumn("Publisher") { article in
-     Text(article.publishedBy ?? "---")
-     }.width(min:30, ideal:50, max:200)
-     }
-     rows: {
-     ForEach(items) { article in
-     TableRow(article)
-     }
-     }}*/
-    
+        
     var collectionsList: some View {
         List(selection: $selectedFolder) {
             ForEach(collections, id: \.self) { collection in
@@ -174,7 +160,7 @@ struct ContentView: View {
                 } else {
                     Section(header: Text(verbatim: collection.name ?? "---")) {
                         if collection.children?.count ?? 0 > 0 {
-                            ForEach(Array(collection.children!) as! Array<Collections>, id: \.self) { aChild in
+                            ForEach(collection.sortedChildren!, id: \.self) { aChild in
                                 NavigationLink(value: aChild) {
                                     Text(verbatim: aChild.name ?? "Name")
                                 }
@@ -239,6 +225,7 @@ struct ContentView: View {
             xmlImportParser.parseXML(at: openPanel.url!)
             //openPanel.url
         }
+        self.rebuildKeywordCollections()
     }
     
     private func searchPredicate(query: String) {
@@ -253,7 +240,10 @@ struct ContentView: View {
             predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText)
         } else if searchScope == .authors {
             predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.authorsForDisplay), self.searchText)
+        } else if searchScope == .keywords {
+            predicate = NSPredicate(format: "ANY keywords.keyword CONTAINS[cd] %@" , self.searchText)
         }
+        
         self.items.nsPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [self.searchControl.originalPredicate ?? NSPredicate(format: "TRUEPREDICATE"), predicate!])
     }
     
@@ -272,18 +262,57 @@ struct ContentView: View {
             sectionOne.isSection = true
             sectionOne.type = 0
             
-            let sectionKeywords = Collections(context: viewContext)
-            sectionKeywords.name = "Keywords"
-            sectionKeywords.canDelete = false
-            sectionKeywords.isSection = true
-            sectionKeywords.type = 1
+            let sectionTwo = Collections(context: viewContext)
+            sectionTwo.name = "Keywords"
+            sectionTwo.canDelete = false
+            sectionTwo.isSection = true
+            sectionTwo.type = 1
+                        
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    private func rebuildKeywordCollections() {
+        // clever to do at each startup? Should we only do that if we delete/add keywords? YES!
+        // but for now we go this way
+        var keyWordSection : Collections?
+        for aSection in collections {
+            if aSection.type == 1 {
+                keyWordSection = aSection
+                break
+            }
+        }
+        if keyWordSection != nil {
             
-            let sectionSmart = Collections(context: viewContext)
-            sectionSmart.name = "Smart Collections"
-            sectionSmart.canDelete = false
-            sectionSmart.isSection = true
-            sectionSmart.type = 2
-            
+        // first remove all keyword collections
+            if let childs = keyWordSection?.children {
+                for aCild in childs {
+                    viewContext.delete(aCild as! Collections)
+                }
+                keyWordSection?.removeFromChildren(childs)
+            }
+        
+        // go through all keywords and add a collection for each
+        
+            let keyWordFetchRequest = Keywords.fetchRequest()
+            keyWordFetchRequest.sortDescriptors = [NSSortDescriptor(key: "keyword", ascending: true)]
+            if let keywordList = try? viewContext.fetch(keyWordFetchRequest) {
+                for aKeyword in keywordList {
+                    let newCollection = Collections(context: viewContext)
+                    newCollection.name = aKeyword.keyword
+                    newCollection.isSection = false
+                    newCollection.canDelete = false
+                    newCollection.type = 1
+                    keyWordSection!.addToChildren(newCollection)
+                }
+            }
             do {
                 try viewContext.save()
             } catch {
@@ -301,6 +330,7 @@ struct ContentView: View {
             newCollection.name = "New collection"
             newCollection.isSection = false
             newCollection.canDelete = true
+            newCollection.type = 0
             
             for aSection in collections {
                 if aSection.type == 0 {
