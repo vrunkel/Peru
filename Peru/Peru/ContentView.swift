@@ -147,6 +147,11 @@ struct ContentView: View {
                     }
                 }
             }
+            .onDeleteCommand(perform: { // This works when clicking in the menu
+                if selectedFolder != nil {
+                    removeCollection()
+                }
+            })
     }
         
     var collectionsList: some View {
@@ -308,7 +313,7 @@ struct ContentView: View {
                     newCollection.name = aKeyword.keyword
                     newCollection.keyword = aKeyword
                     newCollection.isSection = false
-                    newCollection.canDelete = false
+                    newCollection.canDelete = true
                     newCollection.type = 1
                     keyWordSection!.addToChildren(newCollection)
                 }
@@ -359,6 +364,9 @@ struct ContentView: View {
     private func removeCollection() {
         guard let selectedFolder = self.selectedFolder else { return }
         if !selectedFolder.canDelete { return }
+        if self.selectedFolder?.keyword != nil {
+            viewContext.delete(self.selectedFolder!.keyword!)
+        }
         viewContext.delete(selectedFolder)
     }
     
