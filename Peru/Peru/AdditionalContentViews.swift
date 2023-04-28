@@ -16,6 +16,7 @@ struct articleDetailsView: View {
     
     @ObservedObject var article: Article
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    let referenceTypes = ["Journal Article", "Book", "Edited Book", "Book Chapter", "Book Section", "Artwork", "Blog", "Company Report", "Computer Program", "Conference Paper", "Conference Presentation", "Conference Proceedings", "Dataset", "EU Directive", "Film", "Government Document", "Government Publication", "Law Report", "Legal Rule or Regulation", "Manuscript", "Map", "Newspaper Article", "Personal Communication", "Report", "Statute or Act", "Thesis", "Web Page"]
     
     @State var abstractIsExpanded: Bool = false
     @State private var showKeywordsPopover: Bool = false
@@ -26,8 +27,14 @@ struct articleDetailsView: View {
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 10) {
                     Group {
-                        Text(article.type ?? "--")
-                            .font(.subheadline)
+                        Picker("Reference type", selection: Binding($article.type, replacingNilWith: referenceTypes.first!)) {
+                            ForEach(referenceTypes, id:\.self) {
+                                Text($0).font(.subheadline)
+                            }
+                        }
+                        .font(.subheadline)
+                        //Text(article.type ?? "--")
+                        //    .font(.subheadline)
                         Text(((article.authors ?? NSOrderedSet()).array as! [Authors]).map{ $0.lastname ?? "-" }.joined(separator: ", "))
                             .padding(.top, 5)
                         Text(article.title ?? "--")
@@ -84,6 +91,7 @@ struct articleDetailsView: View {
                                     self.abstractIsExpanded.toggle()
                                 }
                                 .lineLimit(self.abstractIsExpanded ? nil: 5)
+                                .lineSpacing(4)
                                 .foregroundColor(article.abstract == nil ? Color.gray : Color.primary)
                             Button {
                                 self.abstractIsExpanded.toggle()
@@ -192,6 +200,7 @@ struct articleEditView: View {
                     .padding(.top)
                 ScrollView {
                     TextEditor(text: Binding($article.abstract, replacingNilWith: ""))
+                        .lineSpacing(6)
                 }
                 Spacer()
             }

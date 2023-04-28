@@ -4,7 +4,6 @@
         <attribute name="abstract" optional="YES" attributeType="String"/>
         <attribute name="accepted" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="added" attributeType="Date" defaultDateTimeInterval="664984260" usesScalarValueType="NO"/>
-        <attribute name="authorsForDisplay" optional="YES" attributeType="String" defaultValueString="---"/>
         <attribute name="citeKey" optional="YES" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="doi" optional="YES" attributeType="URI"/>

@@ -119,16 +119,7 @@ class ImportXML {
                     }
                 }
             }
-            if authorSet.count > 0 {
-                article.authors = NSOrderedSet(orderedSet: authorSet)
-                var string = ""
-                for anAuthor in article.authors! {
-                    string.append(", ")
-                    string.append((anAuthor as! Authors).lastname!)
-                }
-                string.removeFirst(2)
-                article.authorsForDisplay = string
-            }
+            article.authors = authorSet
             
             // authors[1] exist only for Books = Editor!
             let editorsSet = NSMutableOrderedSet()

@@ -178,7 +178,7 @@ struct ContentView: View {
     
     var table: some View {
         Table(items, selection: $selection, sortOrder: $items.sortDescriptors) {
-            TableColumn("Authors", value: \.authorsForDisplay!).width(min:30, ideal:50, max:200)
+            TableColumn("Authors", value: \.authorsForDisplay).width(min:30, ideal:50, max:200)
             TableColumn("Title", value: \.title!).width(min:100, ideal:300, max:500)
             TableColumn("Year", value: \.year) { article in
                 Text(String(article.year))

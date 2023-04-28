@@ -67,3 +67,22 @@ extension Collections {
     }
     
 }
+
+extension Article {
+    
+    @objc var authorsForDisplay: String {
+        get {
+            if self.authors?.count ?? 0 < 1 {
+                return "---"
+            }
+            var string = ""
+            for anAuthor in self.authors! {
+                string.append(", ")
+                string.append((anAuthor as! Authors).lastname!)
+            }
+            string.removeFirst(2)
+            return string
+        }
+    }
+    
+}
