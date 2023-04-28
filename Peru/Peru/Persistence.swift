@@ -68,9 +68,9 @@ extension Collections {
     
 }
 
-extension Article {
+/*extension Article {
     
-    @objc var authorsForDisplay: String {
+    /*@objc var authorsForDisplay: String {
         get {
             if self.authors?.count ?? 0 < 1 {
                 return "---"
@@ -83,6 +83,8 @@ extension Article {
             string.removeFirst(2)
             return string
         }
-    }
+    }*/
     
-}
+    
+    
+}*/
