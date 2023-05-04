@@ -14,10 +14,27 @@ class SearchControl {
     var originalPredicate: NSPredicate?
 }
 
+struct CreateOperation<Object: NSManagedObject>: Identifiable {
+    let id = UUID()
+    let childContext: NSManagedObjectContext
+    let object: Article
+    
+    init(withParentContext parentContext: NSManagedObjectContext) {
+        childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        childContext.parent = parentContext
+        object = Article(context: childContext)
+        object.uuid = UUID().uuidString
+        object.added = Date()
+        object.year = 2023
+        object.published = Date()
+    }
+}
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.appSupportPDFs) private var appSupportPDFURL
+    
+    @State private var configuration: CreateOperation<Article>?
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Collections.type, ascending: true)],
@@ -123,6 +140,10 @@ struct ContentView: View {
                         //items.nsPredicate = NSPredicate(format: "ANY keywords.keyword == %@", newValue!.name!)
                         items.nsPredicate = NSPredicate(format: "ANY keywords == %@", newValue!.keyword!)
                     }
+                    /*else if newValue!.type == 2 {
+                        //items.nsPredicate = NSPredicate(format: "ANY keywords.keyword == %@", newValue!.name!)
+                        items.nsPredicate = NSPredicate(format: "ANY authors == %@", newValue!.authors!)
+                    }*/
                 }
             })
             .toolbar {
@@ -152,6 +173,11 @@ struct ContentView: View {
                     removeCollection()
                 }
             })
+            .sheet(item: $configuration) { configuration in
+                AddArticleView(article: configuration.object)
+                            .environment(\.managedObjectContext, configuration.childContext)
+                            .frame(width: 800, height: 500)
+            }
     }
         
     var collectionsList: some View {
@@ -230,6 +256,7 @@ struct ContentView: View {
             //openPanel.url
         }
         self.rebuildKeywordCollections()
+        //self.rebuildAuthorsCollections()
     }
     
     private func searchPredicate(query: String) {
@@ -271,6 +298,12 @@ struct ContentView: View {
             sectionTwo.canDelete = false
             sectionTwo.isSection = true
             sectionTwo.type = 1
+            
+            /*let sectionThree = Collections(context: viewContext)
+            sectionThree.name = "Authors"
+            sectionThree.canDelete = false
+            sectionThree.isSection = true
+            sectionThree.type = 2*/
                         
             do {
                 try viewContext.save()
@@ -329,6 +362,52 @@ struct ContentView: View {
         }
     }
     
+    private func rebuildAuthorsCollections() {
+        // clever to do at each startup? Should we only do that if we delete/add keywords? YES!
+        // but for now we go this way
+        var authorsSection : Collections?
+        for aSection in collections {
+            if aSection.type == 2 {
+                authorsSection = aSection
+                break
+            }
+        }
+        if authorsSection != nil {
+            
+        // first remove all keyword collections
+            if let childs = authorsSection?.children {
+                for aCild in childs {
+                    viewContext.delete(aCild as! Collections)
+                }
+                authorsSection?.removeFromChildren(childs)
+            }
+        
+        // go through all keywords and add a collection for each
+        
+            let authorsFetchRequest = Authors.fetchRequest()
+            authorsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastname", ascending: true)]
+            if let authorsList = try? viewContext.fetch(authorsFetchRequest) {
+                for anAuthor in authorsList {
+                    let newCollection = Collections(context: viewContext)
+                    newCollection.name = anAuthor.lastname
+                    newCollection.authors = anAuthor
+                    newCollection.isSection = false
+                    newCollection.canDelete = true
+                    newCollection.type = 2
+                    authorsSection!.addToChildren(newCollection)
+                }
+            }
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
     private func addCollection() {
         withAnimation {
             let newCollection = Collections(context: viewContext)
@@ -371,6 +450,8 @@ struct ContentView: View {
     }
     
     private func addItem() {
+        configuration = CreateOperation(withParentContext: viewContext)
+        /*
         withAnimation {
             let newItem = Article(context: viewContext)
             newItem.uuid = UUID().uuidString
@@ -384,18 +465,25 @@ struct ContentView: View {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
-        }
+        }*/
     }
     
     private func deleteArticles() {
         let articlesToDelete = self.selection
         self.selection = Set()
         withAnimation {
+            for anArticle in items.filter({ article in
+                articlesToDelete.contains(article.id)
+            }) {
+                if let url = (anArticle as Article).relatedFile {
+                    try? FileManager.default.removeItem(at: url.deletingLastPathComponent())
+                }
+            }
             items.filter({ article in
                 articlesToDelete.contains(article.id)
             }).forEach(viewContext.delete)
             do {
-                try viewContext.save()
+                 try viewContext.save()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

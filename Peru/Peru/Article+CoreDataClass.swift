@@ -13,43 +13,26 @@ import CoreData
 public class Article: NSManagedObject {
 
     override public func didChangeValue(forKey key: String) {
-        if key == "authors" {
+        if key == "authors" && !self.isDeleted{
             self.willChangeValue(forKey: "authors")
-            if self.authors?.count ?? 0 < 1 {
-                self.authorsForDisplay = "---"
-            } else {
-                var string = ""
-                for anAuthor in self.authors! {
-                    string.append(", ")
-                    string.append((anAuthor as! Authors).lastname!)
-                }
-                string.removeFirst(2)
-                self.authorsForDisplay = string
-            }
+            self.updateAuthorsForDisplay()
         }
         else {
             super.willChangeValue(forKey: key)
         }
     }
     
-    /*override public func willSave() {
-        let changedValues = self.changedValues().keys
-        if !changedValues.contains("authorsForDisplay") {
-            if self.authors?.count ?? 0 < 1 {
-                self.authorsForDisplay = "---"
-            } else {
-                var string = ""
-                for anAuthor in self.authors! {
-                    string.append(", ")
-                    string.append((anAuthor as! Authors).lastname!)
-                }
-                string.removeFirst(2)
-                self.authorsForDisplay = string
-            }
-            self.objectWillChange.send()
+    func updateAuthorsForDisplay() {
+        if self.authors?.count ?? 0 < 1 {
+            self.authorsForDisplay = "---"
         } else {
-            super.willSave()
+            var string = ""
+            for anAuthor in self.authors! {
+                string.append(", ")
+                string.append((anAuthor as! Authors).lastname!)
+            }
+            string.removeFirst(2)
+            self.authorsForDisplay = string
         }
-    }*/
-    
+    }
 }

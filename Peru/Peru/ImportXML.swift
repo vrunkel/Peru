@@ -190,10 +190,10 @@ class ImportXML {
             
             
             if let doiURL = hit.urls["related-urls", "url"].text {
-                article.doi = URL(string:doiURL)
+                article.doi = doiURL
             }
             
-            /*if let pdfURL = hit.urls["pdf-urls", "url"].text {
+            if let pdfURL = hit.urls["pdf-urls", "url"].text {
                 if let sourceURL = URL(string: pdfURL), fm.fileExists(atPath: sourceURL.path) {
                     do {
                         var destinationURL = appSupportPDFURL!.appendingPathComponent(article.uuid!)
@@ -209,7 +209,7 @@ class ImportXML {
                         print(error)
                     }
                 }
-            }*/
+            }
             
             let type = hit["ref-type"].attributes
             if let name = type["name"] {

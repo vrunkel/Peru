@@ -60,15 +60,33 @@ struct AuthorsPopoverContent: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.bottom, 10)
-            HStack(alignment: .bottom) {
+            HStack(alignment: .top) {
                 VStack {
                     TextField("Lastname", text: $lastname)
                     TextField("Firstname", text: $firstname)
                     TextField("Middlenames", text: $middlenames)
+                    Text("Article count \(self.selectedAuthor?.items?.count ?? 0)")
+                        .foregroundColor(.gray)
+                        .opacity(self.selectedAuthor == nil ? 0:1)
                 }.frame(width: 200)
                     .disabled(self.selectedAuthor == nil)
                 Spacer()
                 VStack(alignment: .trailing) {
+                    Button {
+                        if self.selectedAuthor != nil {
+                            self.selectedAuthor!.lastname = self.selectedAuthor!.lastname?.localizedCapitalized ?? ""
+                            self.selectedAuthor!.firstname = self.selectedAuthor!.firstname?.localizedCapitalized ?? ""
+                            
+                            if self.selectedAuthor!.items?.count ?? 0 > 0 {
+                                for anArticle in self.selectedAuthor!.items! {
+                                    (anArticle as! Article).updateAuthorsForDisplay()
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "textformat")
+                    }.buttonStyle(BorderlessButtonStyle())
+                    Spacer().frame(height: 30)
                     Button {
                         let author = Authors(context: viewContext)
                         author.lastname = "Lastname"
@@ -109,32 +127,40 @@ struct AuthorsPopoverContent: View {
                 }
                 .padding(4)
             }.animation(.default, value:authorsSet)
-            ScrollViewReader { proxy in
-                List(selection: $selectedAuthor) {
-                    ForEach(authorItems, id: \.self) { author in
-                        HStack {
-                            Text(author.lastname ?? "---")
-                            Text(",")
-                            Text(author.firstname ?? "---")
-                            Spacer()
-                            Toggle(isOn: getToggleState(author: author)) {
+            if authorItems.count > 0 {
+                ScrollViewReader { proxy in
+                    
+                    List(selection: $selectedAuthor) {
+                        ForEach(authorItems, id: \.self) { author in
+                            HStack {
+                                Text(author.lastname ?? "---")
+                                Text(",")
+                                Text(author.firstname ?? "---")
+                                Spacer()
+                                Toggle(isOn: getToggleState(author: author)) {
+                                }
+                                .toggleStyle(.checkbox)
                             }
-                            .toggleStyle(.checkbox)
+                        }
+                    }.onChange(of: selectedAuthor) { newValue in
+                        if self.selectedAuthor != nil {
+                            self.lastname = self.selectedAuthor?.lastname ?? ""
+                            self.firstname = self.selectedAuthor?.firstname ?? ""
+                            self.middlenames = self.selectedAuthor?.middlenames ?? ""
+                            proxy.scrollTo(self.selectedAuthor!, anchor: .center)
+                        }
+                        else {
+                            self.lastname = ""
+                            self.firstname = ""
+                            self.middlenames = ""
                         }
                     }
-                }.onChange(of: selectedAuthor) { newValue in
-                    if self.selectedAuthor != nil {
-                        self.lastname = self.selectedAuthor?.lastname ?? ""
-                        self.firstname = self.selectedAuthor?.firstname ?? ""
-                        self.middlenames = self.selectedAuthor?.middlenames ?? ""
-                        proxy.scrollTo(self.selectedAuthor!, anchor: .center)
-                    }
-                    else {
-                        self.lastname = ""
-                        self.firstname = ""
-                        self.middlenames = ""
-                    }
                 }
+            }
+            else {
+                Text("You still need to create your first author in this database - go ahead and use the small + sign just above here!")
+                    .foregroundColor(.gray)
+                Spacer()
             }
         }
         .onChange(of: anyOfMultiple, perform: { newValue in
@@ -144,7 +170,7 @@ struct AuthorsPopoverContent: View {
                 self.selectedAuthor!.middlenames = self.middlenames
             }
         })
-        .frame(minWidth: 250, idealWidth: 250, maxWidth: 300, minHeight: 250, idealHeight: 350, maxHeight: 500, alignment: .leading)
+        .frame(minWidth: 250, idealWidth: 250, maxWidth: 300, minHeight: 350, idealHeight: 550, maxHeight: 700, alignment: .leading)
         .padding()
     }
 }

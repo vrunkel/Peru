@@ -25,6 +25,8 @@
 		8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83805B29DD75D500AD4229 /* SwiftyXMLParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */; };
 		8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8590C029D95EAB00ACB632 /* ImportXML.swift */; };
+		8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9362E82A02589F0026B038 /* SharedCode.swift */; };
+		8B9B11D329FD8BDA00C5CBCF /* AddArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */; };
 		8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
 		8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB297A29DB19A400817A14 /* ImportRIS.swift */; };
@@ -80,6 +82,8 @@
 		8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleKeywordsEditoring.swift; sourceTree = "<group>"; };
 		8B8590C029D95EAB00ACB632 /* ImportXML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportXML.swift; sourceTree = "<group>"; };
 		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = ../../SwiftyXMLParser/SwiftyXMLParser.xcodeproj; sourceTree = "<group>"; };
+		8B9362E82A02589F0026B038 /* SharedCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
+		8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddArticleView.swift; sourceTree = "<group>"; };
 		8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataClass.swift"; path = "Peru/Article+CoreDataClass.swift"; sourceTree = "<group>"; };
 		8BA2F44929FC16BD00112427 /* Article+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataProperties.swift"; path = "Peru/Article+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		8BFB297A29DB19A400817A14 /* ImportRIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRIS.swift; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				8B7798EB29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift */,
 				8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */,
 				8B7E1F8029E53467006E0816 /* ArticleCollectionsEditoring.swift */,
+				8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */,
 				8B72206429E92CEC00FA0382 /* EditCollection.swift */,
 				8B51775E29F7B33F008701CC /* PDFPreview.swift */,
 				8B1DFC8328F070BC007A5301 /* Assets.xcassets */,
@@ -139,6 +144,7 @@
 				8B74875229CB742300054783 /* CustomTabView.swift */,
 				8B8590C029D95EAB00ACB632 /* ImportXML.swift */,
 				8BFB297A29DB19A400817A14 /* ImportRIS.swift */,
+				8B9362E82A02589F0026B038 /* SharedCode.swift */,
 			);
 			path = Peru;
 			sourceTree = "<group>";
@@ -276,12 +282,14 @@
 				8B1DFC8228F070BC007A5301 /* ContentView.swift in Sources */,
 				8B51776129F82939008701CC /* PeruCommands.swift in Sources */,
 				8B1DFC8028F070BC007A5301 /* PeruApp.swift in Sources */,
+				8B9B11D329FD8BDA00C5CBCF /* AddArticleView.swift in Sources */,
 				8B7E1F8129E53467006E0816 /* ArticleCollectionsEditoring.swift in Sources */,
 				8B7B4D8129CED6B400593EBF /* AdditionalContentViews.swift in Sources */,
 				8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */,
 				8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */,
 				8B72206529E92CEC00FA0382 /* EditCollection.swift in Sources */,
 				8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */,
+				8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */,
 				8B7798EC29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift in Sources */,
 				8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */,
 			);

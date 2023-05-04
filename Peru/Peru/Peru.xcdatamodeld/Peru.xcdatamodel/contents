@@ -7,7 +7,7 @@
         <attribute name="authorsForDisplay" optional="YES" attributeType="String"/>
         <attribute name="citeKey" optional="YES" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
-        <attribute name="doi" optional="YES" attributeType="URI"/>
+        <attribute name="doi" optional="YES" attributeType="String"/>
         <attribute name="edition" optional="YES" attributeType="String"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
         <attribute name="issue" optional="YES" attributeType="String"/>
@@ -36,6 +36,7 @@
         <attribute name="lastname" attributeType="String" defaultValueString="Lastname"/>
         <attribute name="middlenames" optional="YES" attributeType="String"/>
         <attribute name="orderID" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collections" inverseName="authors" inverseEntity="Collections"/>
         <relationship name="editorItems" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="Article" inverseName="editors" inverseEntity="Article"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="Article" inverseName="authors" inverseEntity="Article"/>
     </entity>
@@ -45,6 +46,7 @@
         <attribute name="name" attributeType="String" defaultValueString="New collection"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="100" usesScalarValueType="YES"/>
         <relationship name="articles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="collections" inverseEntity="Article"/>
+        <relationship name="authors" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Authors" inverseName="collection" inverseEntity="Authors"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collections" inverseName="parent" inverseEntity="Collections"/>
         <relationship name="keyword" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Keywords" inverseName="collection" inverseEntity="Keywords"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collections" inverseName="children" inverseEntity="Collections"/>
