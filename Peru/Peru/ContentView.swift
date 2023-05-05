@@ -209,11 +209,13 @@ struct ContentView: View {
             TableColumn("Year", value: \.year) { article in
                 Text(String(article.year))
             }.width(min:50, ideal:50, max:50)
+            TableColumn("PDF") { article in
+                if article.relatedFile != nil {
+                    Image(systemName: "doc.text")
+                }
+            }.width(min:20, ideal:28, max:32)
             TableColumn("Journal") { article in
                 Text(article.journal?.name ?? "---")
-            }.width(min:30, ideal:50, max:200)
-            TableColumn("Publisher") { article in
-                Text(article.publishedBy ?? "---")
             }.width(min:30, ideal:50, max:200)
         }.onDeleteCommand {
             self.deleteArticles()

@@ -26,9 +26,12 @@
 		8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83D4F729DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift */; };
 		8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8590C029D95EAB00ACB632 /* ImportXML.swift */; };
 		8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9362E82A02589F0026B038 /* SharedCode.swift */; };
+		8B96E1AF2A03F0B100697C08 /* Get in Frameworks */ = {isa = PBXBuildFile; productRef = 8B96E1AE2A03F0B100697C08 /* Get */; };
 		8B9B11D329FD8BDA00C5CBCF /* AddArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */; };
 		8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
+		8BCF1CA22A04F13C001D4AB5 /* GenericJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCF1C9F2A04F134001D4AB5 /* GenericJSON.framework */; };
+		8BCF1CA32A04F13D001D4AB5 /* GenericJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCF1C9F2A04F134001D4AB5 /* GenericJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB297A29DB19A400817A14 /* ImportRIS.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +50,20 @@
 			remoteGlobalIDString = 2B6D923D1C7F0587000D2D06;
 			remoteInfo = SwiftyXMLParserTests;
 		};
+		8BCF1C9E2A04F134001D4AB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D8B1C6D1F5011010071F6FC;
+			remoteInfo = GenericJSON;
+		};
+		8BCF1CA02A04F134001D4AB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D8B1C761F5011010071F6FC;
+			remoteInfo = GenericJSONTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +73,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				8BCF1CA32A04F13D001D4AB5 /* GenericJSON.framework in Embed Frameworks */,
 				8B83805F29DD768100AD4229 /* SwiftyXMLParser.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -86,6 +104,7 @@
 		8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddArticleView.swift; sourceTree = "<group>"; };
 		8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataClass.swift"; path = "Peru/Article+CoreDataClass.swift"; sourceTree = "<group>"; };
 		8BA2F44929FC16BD00112427 /* Article+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataProperties.swift"; path = "Peru/Article+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GenericJSON.xcodeproj; path = "../../generic-json-swift/GenericJSON.xcodeproj"; sourceTree = "<group>"; };
 		8BFB297A29DB19A400817A14 /* ImportRIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRIS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +116,8 @@
 				8BAFBDE529CE10730080E68D /* AQUI in Frameworks */,
 				8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */,
 				8B83805E29DD768100AD4229 /* SwiftyXMLParser.framework in Frameworks */,
+				8BCF1CA22A04F13C001D4AB5 /* GenericJSON.framework in Frameworks */,
+				8B96E1AF2A03F0B100697C08 /* Get in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +130,7 @@
 				8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */,
 				8BA2F44929FC16BD00112427 /* Article+CoreDataProperties.swift */,
 				8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */,
+				8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */,
 				8B1DFC7E28F070BC007A5301 /* Peru */,
 				8B1DFC7D28F070BC007A5301 /* Products */,
 				8B8590CC29D9615B00ACB632 /* Frameworks */,
@@ -173,6 +195,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8BCF1C9A2A04F134001D4AB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8BCF1C9F2A04F134001D4AB5 /* GenericJSON.framework */,
+				8BCF1CA12A04F134001D4AB5 /* GenericJSONTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -193,6 +224,7 @@
 			packageProductDependencies = (
 				8BAFBDE429CE10730080E68D /* AQUI */,
 				8B62C24829DFF36D00226D47 /* WrappingHStack */,
+				8B96E1AE2A03F0B100697C08 /* Get */,
 			);
 			productName = Peru;
 			productReference = 8B1DFC7C28F070BC007A5301 /* Peru.app */;
@@ -225,10 +257,15 @@
 			packageReferences = (
 				8BAFBDE329CE10730080E68D /* XCRemoteSwiftPackageReference "AQUI" */,
 				8B62C24729DFF36D00226D47 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+				8B96E1AD2A03F0B100697C08 /* XCRemoteSwiftPackageReference "Get" */,
 			);
 			productRefGroup = 8B1DFC7D28F070BC007A5301 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 8BCF1C9A2A04F134001D4AB5 /* Products */;
+					ProjectRef = 8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */;
+				},
 				{
 					ProductGroup = 8B83805629DD75D500AD4229 /* Products */;
 					ProjectRef = 8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */;
@@ -254,6 +291,20 @@
 			fileType = wrapper.cfbundle;
 			path = SwiftyXMLParserTests.xctest;
 			remoteRef = 8B83805C29DD75D500AD4229 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8BCF1C9F2A04F134001D4AB5 /* GenericJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GenericJSON.framework;
+			remoteRef = 8BCF1C9E2A04F134001D4AB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8BCF1CA12A04F134001D4AB5 /* GenericJSONTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GenericJSONTests.xctest;
+			remoteRef = 8BCF1CA02A04F134001D4AB5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -501,6 +552,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		8B96E1AD2A03F0B100697C08 /* XCRemoteSwiftPackageReference "Get" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vrunkel/Get";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		8BAFBDE329CE10730080E68D /* XCRemoteSwiftPackageReference "AQUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AlanQuatermain/AQUI.git";
@@ -516,6 +575,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8B62C24729DFF36D00226D47 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
 			productName = WrappingHStack;
+		};
+		8B96E1AE2A03F0B100697C08 /* Get */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B96E1AD2A03F0B100697C08 /* XCRemoteSwiftPackageReference "Get" */;
+			productName = Get;
 		};
 		8BAFBDE429CE10730080E68D /* AQUI */ = {
 			isa = XCSwiftPackageProductDependency;

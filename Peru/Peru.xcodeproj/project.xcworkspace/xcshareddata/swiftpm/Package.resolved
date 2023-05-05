@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vrunkel/Get",
+      "state" : {
+        "branch" : "main",
+        "revision" : "12830cc64f31789ae6f4352d2d51d03a25fc3741"
+      }
+    },
+    {
       "identity" : "wrappinghstack",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dkk/WrappingHStack",

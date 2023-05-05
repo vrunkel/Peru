@@ -162,6 +162,14 @@ struct AddArticleView: View {
                 dismiss()
             }
         }
+        .toolbar {
+            Button("Cancel") {
+                /*context.perform {
+                 context.rollback()
+                 }*/
+                dismiss()
+            }
+        }
         .padding(20)
         .onAppear {
             self.autocomplete.reloadCache(journals: journals.map{ $0.name ?? "" })
