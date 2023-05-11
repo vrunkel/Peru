@@ -186,6 +186,16 @@ struct ContentView: View {
                     removeCollection()
                 }
             })
+            .onCopyCommand(perform: {
+                var copyString = ""
+                for anArticleID in self.selection {
+                    if let article = items.filter({ $0.id == anArticleID }).first ?? nil {
+                        if !copyString.isEmpty { copyString += "\n"}
+                        copyString += article.articleLongReference()
+                    }
+                }
+                return [NSItemProvider(object: copyString as NSString)]
+            })
             .sheet(item: $configuration) { configuration in
                 AddArticleView(article: configuration.object, pdfURL: configuration.pdfURL)
                             .environment(\.managedObjectContext, configuration.childContext)

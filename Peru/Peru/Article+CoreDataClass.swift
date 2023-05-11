@@ -35,4 +35,31 @@ public class Article: NSManagedObject {
             self.authorsForDisplay = string
         }
     }
+    
+    func articleLongReference() -> String {
+        var referenceString = ""
+        for anAuthor in self.authors! {
+            if !referenceString.isEmpty {
+                referenceString.append(", ")
+            }
+            referenceString.append((anAuthor as! Authors).lastname!)
+            referenceString.append(", ")
+            referenceString.append((anAuthor as! Authors).firstname ?? "")
+        }
+        
+        referenceString += " (\(self.year))"
+        referenceString += ": "
+        referenceString += self.title ?? "-"
+        referenceString += ". "
+        
+        if let journal = self.journal {
+            referenceString += journal.name ?? "-"
+        }
+        
+        if let doi = self.doi {
+            referenceString += ". " + doi
+        }
+        
+        return referenceString
+    }
 }
