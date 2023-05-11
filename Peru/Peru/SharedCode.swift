@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftyXMLParser
 
 let referenceTypes = ["Journal Article", "Book", "Edited Book", "Book Chapter", "Book Section", "Artwork", "Blog", "Company Report", "Computer Program", "Conference Paper", "Conference Presentation", "Conference Proceedings", "Dataset", "EU Directive", "Film", "Government Document", "Government Publication", "Law Report", "Legal Rule or Regulation", "Manuscript", "Map", "Newspaper Article", "Personal Communication", "Report", "Statute or Act", "Thesis", "Web Page"]
 
@@ -104,6 +103,8 @@ final class AutocompleteObject: ObservableObject {
 struct MatchingItem: Decodable {
     var publisher_location: String?
     var journal: String?
+    var journal_abbrev: String?
+    var journalISSN: String?
     var edition_number: String?
     var publisher: String?
     var issue: String?
@@ -119,88 +120,7 @@ struct MatchingItem: Decodable {
     var abstract: String?
 }
 
-func doiMatch(doi: String) async -> [MatchingItem]? {
-    
-    do {
-        
-        let (data, _) = try await URLSession.shared.data(from: URL(string: "https://doi.crossref.org/servlet/query?pid=runkel@ecoobs.de&format=unixref**&id="+doi)!)
-        if let xml = try? XML.parse(String(data: data, encoding: .utf8)!) {
-            print(xml["crossref_result", "query_result"].element!.childElements)
-            
-            var itemForMatch = MatchingItem()
-            /*
-             journal_metadata
-             journal_issue
-             journal_article
-             */
-            
-            if let journalTitleString =  xml["crossref_result", "query_result", "body", "query", "doi_record", "crossref", "journal", "journal_metadata"].full_title.text {
-                itemForMatch.journal = journalTitleString
-            }
-            
-            if let journalIssueString =  xml["crossref_result", "query_result", "body", "query", "doi_record", "crossref", "journal", "journal_issue"].issue.text {
-                itemForMatch.issue = journalIssueString
-            }
-            
-            if let journalVolumeString =  xml["crossref_result", "query_result", "body", "query", "doi_record", "crossref", "journal", "journal_issue"].journal_volume.volume.text {
-                itemForMatch.volume = journalVolumeString
-            }
-            
-            for anElement in xml["crossref_result", "query_result", "body", "query", "doi_record", "crossref", "journal", "journal_article"] {
-                
-                if let titleString =  anElement.titles.title.text {
-                    itemForMatch.title = titleString
-                }
-                
-                for author in anElement.contributors.person_name {
-                    var authorString = (author.surname.text ?? "") + ", "
-                    authorString += author.given_name.text ?? ""
-                    itemForMatch.authors.append(authorString)
-                }
-                
-                if let abstractString =  anElement["jats:abstract"][0]["jats:p"].text {
-                    itemForMatch.abstract = abstractString
-                }
-                
-                if let abstractString = anElement["jats:abstract"][1]["jats:p"].text {
-                    itemForMatch.abstract = abstractString
-                }
-                
-                if let doiString =  anElement.doi_data.doi.text {
-                    itemForMatch.DOI = doiString
-                }
-                
-                if let yearString =  anElement.publication_date.first.year.text {
-                    itemForMatch.year = yearString
-                }
-                
-                if let monthString =  anElement.publication_date.first.month.text {
-                    itemForMatch.month = monthString
-                }
-                
-                if let dayString =  anElement.publication_date.first.day.text {
-                    itemForMatch.day = dayString
-                }
-                
-                if let pagesString =  anElement.pages.first_page.text {
-                    itemForMatch.pages = pagesString
-                }
-                
-                if let pagesString =  anElement.pages.last_page.text {
-                    if itemForMatch.pages != nil {
-                        itemForMatch.pages! += "-" + pagesString
-                    }
-                }
-            }
-            
-            return [itemForMatch]
-        }
-    }
-    catch let error {
-        print(error)
-    }
-    return nil
-}
+
 
 /* not used - generic json favoured
  struct CrossRefData: Decodable {

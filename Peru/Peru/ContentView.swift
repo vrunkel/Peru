@@ -18,8 +18,9 @@ struct CreateOperation<Object: NSManagedObject>: Identifiable {
     let id = UUID()
     let childContext: NSManagedObjectContext
     let object: Article
+    var pdfURL: URL?
     
-    init(withParentContext parentContext: NSManagedObjectContext) {
+    init(withParentContext parentContext: NSManagedObjectContext, pdfURL: URL?) {
         childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         childContext.parent = parentContext
         object = Article(context: childContext)
@@ -27,6 +28,7 @@ struct CreateOperation<Object: NSManagedObject>: Identifiable {
         object.added = Date()
         object.year = 2023
         object.published = Date()
+        self.pdfURL = pdfURL
     }
 }
 
@@ -101,6 +103,17 @@ struct ContentView: View {
                 .onSubmit(of: .search) {
                     searchPredicate(query: searchText)
                 }
+                .onDrop(of: [.url], isTargeted: nil) { providers in
+                    providers.forEach { provider in
+                        _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                            if let url {
+                                //print(url)
+                                configuration = CreateOperation(withParentContext: viewContext, pdfURL: url)
+                            }
+                        }
+                    }
+                    return true
+                }
         } detail: {
             if self.selection.count > 0 && self.items.count > 0 {
                 CustomTabView(
@@ -174,7 +187,7 @@ struct ContentView: View {
                 }
             })
             .sheet(item: $configuration) { configuration in
-                AddArticleView(article: configuration.object)
+                AddArticleView(article: configuration.object, pdfURL: configuration.pdfURL)
                             .environment(\.managedObjectContext, configuration.childContext)
                             .frame(width: 800, height: 500)
             }
@@ -452,22 +465,7 @@ struct ContentView: View {
     }
     
     private func addItem() {
-        configuration = CreateOperation(withParentContext: viewContext)
-        /*
-        withAnimation {
-            let newItem = Article(context: viewContext)
-            newItem.uuid = UUID().uuidString
-            newItem.added = Date()
-            
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }*/
+        configuration = CreateOperation(withParentContext: viewContext, pdfURL: nil)
     }
     
     private func deleteArticles() {

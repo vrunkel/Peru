@@ -78,24 +78,13 @@ struct PDFPreview: View {
                     }
                 }
                 .onAppear {
-                    Task {
-                        if let pdfDocument = self.pdfDocument {
-                            let doiSearch = pdfDocument.findString("doi", withOptions: .caseInsensitive)
-                            if !doiSearch.isEmpty {
-                                let searchRes = doiSearch.first!
-                                searchRes.extendForLineBoundaries()
-                                if var lineString = searchRes.string?.lowercased() {
-                                    print(lineString)
-                                    if let range: Range<String.Index> = lineString.range(of: "doi") {
-                                        let index: Int = lineString.distance(from: lineString.startIndex, to: range.lowerBound)
-                                        lineString.removeSubrange(lineString.startIndex..<lineString.index(lineString.startIndex, offsetBy: index+3))
-                                        if lineString.hasPrefix(":") {
-                                            lineString.remove(at: lineString.startIndex)
-                                        }
-                                        lineString = lineString.trimmingCharacters(in: .whitespacesAndNewlines)
-                                        let matchingItems = await doiMatch(doi: lineString)
-                                        print(matchingItems?.first)
-                                    }
+                    if let pdfDocument = self.pdfDocument {
+                        let metaMatcher = MetaDataQuery()
+                        metaMatcher.pdfDocument = pdfDocument
+                        if let doi = metaMatcher.doiFromPDFDocument() {
+                            Task {
+                                if let matchingItems = await metaMatcher.doiMatchWithCrossref(doi: doi), !matchingItems.isEmpty {
+                                    print(matchingItems.first!)
                                 }
                             }
                         }

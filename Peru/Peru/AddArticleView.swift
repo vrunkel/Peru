@@ -26,6 +26,15 @@ struct AddArticleView: View {
     
     @FocusState private var isAbstractFocused: Bool
     
+    @State private var pdfURL: URL?
+    
+    init(article: Article, pdfURL: URL? = nil) {
+        self.article = article
+        if pdfURL != nil {
+            _pdfURL = State(initialValue: pdfURL)
+        }
+    }
+    
     var body: some View {
         HStack(alignment: .top) {
             VStack {
@@ -38,7 +47,7 @@ struct AddArticleView: View {
                     .font(.subheadline)
                     TextField("Title", text: Binding($article.title, replacingNilWith: ""), axis: .vertical)
                         .font(.headline)
-                        .lineLimit(_:5)
+                        .frame(minHeight: 50)
                     TextField("Subtitle", text: Binding($article.subtitle, replacingNilWith: ""), axis: .vertical)
                 }
                 
@@ -141,38 +150,147 @@ struct AddArticleView: View {
             AuthorsPopoverContent(Binding($article.authors, replacingNilWith: NSOrderedSet()))
         }
         .toolbar {
+            
             Button("Cancel") {
                 /*context.perform {
                  context.rollback()
                  }*/
                 dismiss()
             }
-        }
-        .toolbar {
+            
+            Spacer()
+            
+            Button("Add PDF") {
+                let openPanel = NSOpenPanel()
+                openPanel.allowedContentTypes = [UTType.pdf]
+                openPanel.allowsMultipleSelection = false
+                openPanel.canChooseDirectories = false
+                openPanel.canChooseFiles = true
+                let response = openPanel.runModal()
+                if response == .OK {
+                    self.pdfURL = openPanel.url
+                    self.addPDF(from: openPanel.url!)
+                }
+            }
+            
             Button("Save") {
-                if article.title == nil {
-                    article.title = ""
-                }
-                if article.authorsForDisplay?.count ?? 0 < 1 {
-                    article.authorsForDisplay = "---"
-                }
-                context.perform {
-                    try? context.save()
-                }
+                self.saveArticle()
                 dismiss()
             }
         }
-        .toolbar {
-            Button("Cancel") {
-                /*context.perform {
-                 context.rollback()
-                 }*/
-                dismiss()
-            }
-        }
+        
         .padding(20)
         .onAppear {
             self.autocomplete.reloadCache(journals: journals.map{ $0.name ?? "" })
+            if self.pdfURL != nil {
+                self.addPDF(from: self.pdfURL!)
+            }
         }
     }
+    
+    func saveArticle() {
+        if article.title == nil {
+            article.title = ""
+        }
+        if article.authorsForDisplay?.count ?? 0 < 1 {
+            article.authorsForDisplay = "---"
+        }
+        
+        if self.pdfURL != nil {
+            do {
+                let fm = FileManager.default
+                let appSupportPDFURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("de.ecoObs.Peru").appendingPathComponent("PDFs")
+                var destinationURL = appSupportPDFURL.appendingPathComponent(article.uuid!)
+                if !fm.fileExists(atPath: destinationURL.path) {
+                    try fm.createDirectory(at: destinationURL, withIntermediateDirectories: true)
+                }
+                destinationURL.appendPathComponent(self.pdfURL!.lastPathComponent)
+                
+                try fm.copyItem(at: self.pdfURL!, to: destinationURL)
+                article.relatedFile = destinationURL
+            }
+            catch let error {
+                print(error)
+            }
+        }
+        
+        context.perform {
+            try? context.save()
+        }
+    }
+    
+    func addPDF(from url:URL) {
+        let metaMatcher = MetaDataQuery()
+        metaMatcher.pdfDocumentURL = url
+        if metaMatcher.pdfDocument != nil {
+            if let doi = metaMatcher.doiFromPDFDocument() {
+                Task {
+                    if let matchingItems = await metaMatcher.doiMatchWithCrossref(doi: doi), !matchingItems.isEmpty {
+                        article.title = matchingItems.first!.title
+                        article.doi = doi
+                        if matchingItems.first!.year != nil {
+                            article.year = Int16(matchingItems.first!.year!) ?? 0
+                        }
+                        article.pages = matchingItems.first!.pages
+                        article.volume = matchingItems.first!.volume
+                        article.issue = matchingItems.first!.issue
+                        
+                        if let journal = matchingItems.first!.journal {
+                            let journalFetchRequest = Journal.fetchRequest()
+                            journalFetchRequest.predicate = NSPredicate(format: "name == %@", journal)
+                            if let fetchedJournals = try? context.fetch(journalFetchRequest), !fetchedJournals.isEmpty {
+                                article.journal = fetchedJournals.first
+                            } else {
+                                let newJournal = Journal(context: context)
+                                newJournal.name = journal
+                                newJournal.abbrev = matchingItems.first!.journal_abbrev
+                                newJournal.issn = matchingItems.first!.journalISSN
+                                article.journal = newJournal
+                            }
+                        }
+                        
+                        let authors = matchingItems.first!.authors
+                        let authorsSet = NSMutableOrderedSet()
+                        for anAuthor in authors {
+                            let authorFetchRequest = Authors.fetchRequest()
+                            let nameComponents = anAuthor.components(separatedBy: ", ")
+                            if nameComponents.isEmpty {
+                                continue
+                            }
+                            authorFetchRequest.predicate = NSPredicate(format: "lastname == %@", nameComponents.first!)
+                            if let fetchedAuthors = try? context.fetch(authorFetchRequest), !fetchedAuthors.isEmpty {
+                                var addedAuthor = false
+                                for aFetchedAuthor in fetchedAuthors {
+                                    if aFetchedAuthor.firstname != nil && nameComponents.count >= 1 && aFetchedAuthor.firstname!.hasPrefix(nameComponents[1]) {
+                                        authorsSet.add(aFetchedAuthor)
+                                        addedAuthor.toggle()
+                                        break
+                                    }
+                                }
+                                if !addedAuthor {
+                                    let author = Authors(context: context)
+                                    author.lastname = nameComponents.first
+                                    if nameComponents.count >= 1 {
+                                        author.firstname = nameComponents[1]
+                                    }
+                                    authorsSet.add(author)
+                                }
+                            } else {
+                                let author = Authors(context: context)
+                                author.lastname = nameComponents.first
+                                if nameComponents.count >= 1 {
+                                    author.firstname = nameComponents[1]
+                                }
+                                authorsSet.add(author)
+                            }
+                        }
+                        if authorsSet.count > 0 {
+                            article.authors = NSOrderedSet(orderedSet: authorsSet)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }

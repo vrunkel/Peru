@@ -53,6 +53,7 @@
     </entity>
     <entity name="Journal" representedClassName="Journal" syncable="YES" codeGenerationType="class">
         <attribute name="abbrev" optional="YES" attributeType="String"/>
+        <attribute name="issn" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String" defaultValueString="Journal"/>
         <relationship name="myArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Article" inverseName="journal" inverseEntity="Article"/>
     </entity>

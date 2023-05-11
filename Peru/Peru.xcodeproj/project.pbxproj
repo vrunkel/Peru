@@ -28,6 +28,7 @@
 		8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9362E82A02589F0026B038 /* SharedCode.swift */; };
 		8B96E1AF2A03F0B100697C08 /* Get in Frameworks */ = {isa = PBXBuildFile; productRef = 8B96E1AE2A03F0B100697C08 /* Get */; };
 		8B9B11D329FD8BDA00C5CBCF /* AddArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */; };
+		8B9B52B22A0625DD00381D6F /* MetaDataQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9B52B12A0625DD00381D6F /* MetaDataQuery.swift */; };
 		8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */; };
 		8BAFBDE529CE10730080E68D /* AQUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BAFBDE429CE10730080E68D /* AQUI */; };
 		8BCF1CA22A04F13C001D4AB5 /* GenericJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCF1C9F2A04F134001D4AB5 /* GenericJSON.framework */; };
@@ -102,6 +103,7 @@
 		8B8590C329D9614500ACB632 /* SwiftyXMLParser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyXMLParser.xcodeproj; path = ../../SwiftyXMLParser/SwiftyXMLParser.xcodeproj; sourceTree = "<group>"; };
 		8B9362E82A02589F0026B038 /* SharedCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
 		8B9B11D229FD8A6F00C5CBCF /* AddArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddArticleView.swift; sourceTree = "<group>"; };
+		8B9B52B12A0625DD00381D6F /* MetaDataQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataQuery.swift; sourceTree = "<group>"; };
 		8BA2F44829FC16BD00112427 /* Article+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataClass.swift"; path = "Peru/Article+CoreDataClass.swift"; sourceTree = "<group>"; };
 		8BA2F44929FC16BD00112427 /* Article+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Article+CoreDataProperties.swift"; path = "Peru/Article+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		8BCF1C992A04F134001D4AB5 /* GenericJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GenericJSON.xcodeproj; path = "../../generic-json-swift/GenericJSON.xcodeproj"; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				8B8590C029D95EAB00ACB632 /* ImportXML.swift */,
 				8BFB297A29DB19A400817A14 /* ImportRIS.swift */,
 				8B9362E82A02589F0026B038 /* SharedCode.swift */,
+				8B9B52B12A0625DD00381D6F /* MetaDataQuery.swift */,
 			);
 			path = Peru;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				8B83D4F829DFEA2000D3DB25 /* ArticleKeywordsEditoring.swift in Sources */,
 				8B8590C129D95EAB00ACB632 /* ImportXML.swift in Sources */,
 				8B72206529E92CEC00FA0382 /* EditCollection.swift in Sources */,
+				8B9B52B22A0625DD00381D6F /* MetaDataQuery.swift in Sources */,
 				8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */,
 				8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */,
 				8B7798EC29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift in Sources */,
