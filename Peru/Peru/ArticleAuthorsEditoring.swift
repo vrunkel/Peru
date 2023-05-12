@@ -135,7 +135,7 @@ struct AuthorsPopoverContent: View {
                             HStack {
                                 Text(author.lastname ?? "---")
                                 Text(",")
-                                Text(author.firstname ?? "---")
+                                Text(author.firstname ?? "")
                                 Spacer()
                                 Toggle(isOn: getToggleState(author: author)) {
                                 }

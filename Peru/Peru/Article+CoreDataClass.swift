@@ -13,7 +13,7 @@ import CoreData
 public class Article: NSManagedObject {
 
     override public func didChangeValue(forKey key: String) {
-        if key == "authors" && !self.isDeleted{
+        if key == "authors" && !self.isDeleted {
             self.willChangeValue(forKey: "authors")
             self.updateAuthorsForDisplay()
         }
@@ -27,15 +27,22 @@ public class Article: NSManagedObject {
             self.authorsForDisplay = "---"
         } else {
             var string = ""
-            for anAuthor in self.authors! {
-                string.append(", ")
-                string.append((anAuthor as! Authors).lastname!)
+            if self.authors!.count < 3 {
+                for anAuthor in self.authors! {
+                    string.append(" & ")
+                    string.append((anAuthor as! Authors).lastname!)
+                }
+                string.removeFirst(3)
+                self.authorsForDisplay = string
+            } else {
+                var string = ""
+                string += (self.authors!.firstObject as! Authors).lastname ?? "---"
+                string += " et al."
+                self.authorsForDisplay = string
             }
-            string.removeFirst(2)
-            self.authorsForDisplay = string
         }
     }
-    
+        
     func articleLongReference() -> String {
         var referenceString = ""
         for anAuthor in self.authors! {

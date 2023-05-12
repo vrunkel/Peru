@@ -78,7 +78,7 @@ struct PDFPreview: View {
                     }
                 }
                 .onAppear {
-                    if let pdfDocument = self.pdfDocument {
+                    /*if let pdfDocument = self.pdfDocument {
                         let metaMatcher = MetaDataQuery()
                         metaMatcher.pdfDocument = pdfDocument
                         if let doi = metaMatcher.doiFromPDFDocument() {
@@ -89,6 +89,7 @@ struct PDFPreview: View {
                             }
                         }
                     }
+                     */
                 }
         }
         else {

@@ -250,14 +250,13 @@ struct ContentView: View {
         let openPanel = NSOpenPanel()
         openPanel.message = "Authorize access to folder containing PDF files for your literature"
         openPanel.prompt = "Authorize"
-        openPanel.canChooseFiles = true
+        openPanel.canChooseFiles = false
         openPanel.canChooseDirectories = true
         openPanel.canCreateDirectories = false
         
         openPanel.begin { result in
-            // WARNING: It's absolutely necessary to access NSOpenPanel.url property to get access
             guard result == .OK, let url = openPanel.url else {
-                // HANDLE ERROR HERE ...
+                // ERROR HANDLING
                 return
             }
             if url.startAccessingSecurityScopedResource() {

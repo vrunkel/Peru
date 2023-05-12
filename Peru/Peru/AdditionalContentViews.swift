@@ -235,6 +235,11 @@ struct articleEditView: View {
                 Spacer()
             }
         }.padding()
+            .onChange(of: showAuthorsPopover) { _ in
+                if !self.showAuthorsPopover {
+                    article.updateAuthorsForDisplay()
+                }
+            }
     }
 }
 
