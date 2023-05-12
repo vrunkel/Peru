@@ -168,6 +168,13 @@ struct AuthorsPopoverContent: View {
                 self.selectedAuthor!.lastname = self.lastname
                 self.selectedAuthor!.firstname = self.firstname
                 self.selectedAuthor!.middlenames = self.middlenames
+                
+                if self.selectedAuthor!.items != nil {
+                    for anArticle in self.selectedAuthor!.items!.allObjects {
+                        (anArticle as! Article).updateAuthorsForDisplay()
+                    }
+                }
+                
             }
         })
         .frame(minWidth: 250, idealWidth: 250, maxWidth: 300, minHeight: 350, idealHeight: 550, maxHeight: 700, alignment: .leading)
