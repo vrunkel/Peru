@@ -17,6 +17,9 @@ public class Article: NSManagedObject {
             self.willChangeValue(forKey: "authors")
             self.updateAuthorsForDisplay()
         }
+        if key == "published" && !self.isDeleted {
+            self.updateYear()
+        }
         else {
             super.willChangeValue(forKey: key)
         }
@@ -39,6 +42,14 @@ public class Article: NSManagedObject {
                 string += (self.authors!.firstObject as! Authors).lastname ?? "---"
                 string += " et al."
                 self.authorsForDisplay = string
+            }
+        }
+    }
+    
+    func updateYear() {
+        if let date = self.published {
+            if let year = NSCalendar(identifier: .gregorian)?.component(.year, from: date) {
+                self.year = Int16(year)
             }
         }
     }
