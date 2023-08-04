@@ -111,6 +111,7 @@ struct articleDetailsView: View {
                     HStack(alignment: .top) {
                         Image(systemName: "link")
                         Text(article.doi ?? "https://doi...")
+                            .textSelection(.enabled)
                     }
                     HStack(alignment: .top) {
                         Image(systemName: "doc.text")
@@ -123,6 +124,7 @@ struct articleDetailsView: View {
                     }
                     Spacer()
                 }
+                .textSelection(.enabled)
                 .padding(10)
                 .frame(width: geometry.size.width)
             }
