@@ -8,7 +8,16 @@
 import SwiftUI
 
 struct PeruCommands: Commands {
+    
+    @Environment(\.openWindow) var openWindow
+    
     var body: some Commands {
         SidebarCommands()
+        CommandGroup(after: .windowList) {
+            Divider()
+            Button("Show author list") {
+                openWindow(id: "Authors")
+            }
+        }
     }
 }

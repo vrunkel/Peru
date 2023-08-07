@@ -294,7 +294,7 @@ struct ContentView: View {
         if self.searchScope == .title {
             predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.title), self.searchText)
         } else if searchScope == .authors {
-            predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(Article.authorsForDisplay), self.searchText)
+            predicate = NSPredicate(format: "ANY authors.lastname CONTAINS[cd] %@",self.searchText)
         } else if searchScope == .keywords {
             predicate = NSPredicate(format: "ANY keywords.keyword CONTAINS[cd] %@" , self.searchText)
         }

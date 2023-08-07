@@ -34,6 +34,11 @@ struct PeruApp: App {
                     .navigationTitle(article.title ?? "---")
             }
         }
+        
+        WindowGroup("Authors", id: "Authors") {
+            AuthorsList()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }.windowResizability(.contentSize)
     }
 }
 
