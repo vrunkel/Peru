@@ -14,6 +14,7 @@
 		8B1DFC8928F070BC007A5301 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8828F070BC007A5301 /* Persistence.swift */; };
 		8B1DFC8C28F070BC007A5301 /* Peru.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8B1DFC8A28F070BC007A5301 /* Peru.xcdatamodeld */; };
 		8B2535A72A7D2347007EE1C0 /* AuthorsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2535A62A7D2347007EE1C0 /* AuthorsListView.swift */; };
+		8B2535D82A8273A3007EE1C0 /* JournalsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2535D72A8273A3007EE1C0 /* JournalsListView.swift */; };
 		8B51775F29F7B33F008701CC /* PDFPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B51775E29F7B33F008701CC /* PDFPreview.swift */; };
 		8B51776129F82939008701CC /* PeruCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B51776029F82939008701CC /* PeruCommands.swift */; };
 		8B62C24929DFF36D00226D47 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8B62C24829DFF36D00226D47 /* WrappingHStack */; };
@@ -93,6 +94,7 @@
 		8B1DFC8B28F070BC007A5301 /* Peru.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Peru.xcdatamodel; sourceTree = "<group>"; };
 		8B1DFC8D28F070BC007A5301 /* Peru.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Peru.entitlements; sourceTree = "<group>"; };
 		8B2535A62A7D2347007EE1C0 /* AuthorsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsListView.swift; sourceTree = "<group>"; };
+		8B2535D72A8273A3007EE1C0 /* JournalsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalsListView.swift; sourceTree = "<group>"; };
 		8B51775E29F7B33F008701CC /* PDFPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPreview.swift; sourceTree = "<group>"; };
 		8B51776029F82939008701CC /* PeruCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeruCommands.swift; sourceTree = "<group>"; };
 		8B72206429E92CEC00FA0382 /* EditCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCollection.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				8B9362E82A02589F0026B038 /* SharedCode.swift */,
 				8B9B52B12A0625DD00381D6F /* MetaDataQuery.swift */,
 				8B2535A62A7D2347007EE1C0 /* AuthorsListView.swift */,
+				8B2535D72A8273A3007EE1C0 /* JournalsListView.swift */,
 			);
 			path = Peru;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				8BA2F44A29FC173E00112427 /* Article+CoreDataClass.swift in Sources */,
 				8B9362E92A02589F0026B038 /* SharedCode.swift in Sources */,
 				8B7798EC29D82E8F00BB2072 /* ArticleAuthorsEditoring.swift in Sources */,
+				8B2535D82A8273A3007EE1C0 /* JournalsListView.swift in Sources */,
 				8BFB297B29DB19F600817A14 /* ImportRIS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -479,7 +483,7 @@
 				CODE_SIGN_ENTITLEMENTS = Peru/Peru.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Peru/Preview Content\"";
 				DEVELOPMENT_TEAM = 3YKFA98U4Y;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -508,7 +512,7 @@
 				CODE_SIGN_ENTITLEMENTS = Peru/Peru.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Peru/Preview Content\"";
 				DEVELOPMENT_TEAM = 3YKFA98U4Y;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -39,6 +39,11 @@ struct PeruApp: App {
             AuthorsList()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }.windowResizability(.contentSize)
+        
+        WindowGroup("Journals", id: "Journals") {
+            JournalsList()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }.windowResizability(.contentSize)
     }
 }
 

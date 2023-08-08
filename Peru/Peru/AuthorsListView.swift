@@ -132,6 +132,11 @@ struct AuthorsList: View {
                         item.lastname = self.lastname
                         item.firstname = self.firstname
                         item.middlenames = self.middlenames
+                        if item.items?.count ?? 0 > 0 {
+                            for anArticle in item.items! {
+                                (anArticle as! Article).updateAuthorsForDisplay()
+                            }
+                        }
                     }
                 }
             })

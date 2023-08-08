@@ -18,6 +18,9 @@ struct PeruCommands: Commands {
             Button("Show author list") {
                 openWindow(id: "Authors")
             }
+            Button("Show journal list") {
+                openWindow(id: "Journals")
+            }
         }
     }
 }
