@@ -121,6 +121,12 @@ struct articleDetailsView: View {
                                 }
                             }
                         Text(article.relatedFile?.description ?? "no file linked")
+                        Image(systemName: "arrow.right.square")
+                            .onTapGesture {
+                                if let url = article.relatedFile {
+                                    NSWorkspace.shared.open(url)
+                                }
+                            }
                     }
                     Spacer()
                 }
